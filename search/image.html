@@ -2,11 +2,24 @@
 <html lang="en">
     <head>
         <title>Search</title>
+        <link rel="stylesheet" href="static/styles.css">
     </head>
     <body>
-        <form action="https://google.com/imghp">
-            <input type="text" name="q">
-            <input type="submit" value="Image Search">
-        </form>
+        <div class="links">
+            <a href="index.html">Go back</a>
+        </div>
+        <div class="logo">
+            <span style="color:blue">G</span>
+            <span style="color:red">o</span>
+            <span style="color:yellow">o</span>
+            <span style="color:blue">g</span>
+            <span style="color:green">l</span>
+            <span style="color:red">e</span>
+        </div>
+        <form method="get" class="form-box" action='https://images.google.com/search'>
+            <input type=text class="form-text" autocomplete="off" name="q"><br>
+            <br>
+            <input type=submit name='btnW'class="search-button" value='search'>
+            </form>
     </body>
 </html>

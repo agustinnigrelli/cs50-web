@@ -1,0 +1,53 @@
+.links {
+    height: 50px;
+    padding: 20px;
+    text-align: right;
+    font-style: normal;
+    font-family: Verdana;
+}
+
+a {
+    text-decoration: none;
+}
+.logo {
+    padding: 20px;
+    width: 500px;
+    height: 100px;
+    margin-top: auto;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: auto;
+
+    text-align: center;
+    vertical-align: bottom;
+    font-family: Verdana;
+    font-weight: normal;
+    font-size: 72px;
+}
+
+.form-box {
+    text-align: center;
+    padding: 20px;
+    width: 500px;
+    height: 100px;
+    margin-top: auto;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: auto;
+}
+
+.form-text {
+    font-size: 20px;
+    border-radius: 50px;
+    width: 300px;
+    height: 30px;
+}
+
+.search-button{
+    padding: 10px 10px;
+    background-color: royalblue;
+    border-radius: 10px;
+    border: none;
+    color: white;
+    font-size: 16px;
+}
