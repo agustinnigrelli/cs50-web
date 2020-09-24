@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Search</title>
+        <link rel="stylesheet" href="static/styles.css">
+    </head>
+    <body>
+        <nav class="nav-bar">
+            <span class="hind-font" style="color:#4285F4">G</span>
+            <span class="hind-font" style="color:#EA4335">o</span>
+            <span class="hind-font" style="color:#FBBC05">o</span>
+            <span class="hind-font" style="color:#4285F4">g</span>
+            <span class="hind-font" style="color:#34A853">l</span>
+            <span class="hind-font" style="color:#EA4335">e</span>
+       
+            <a style="float: right; font-family: Verdana; font-size: 16px;" href="index.html">Go back</a>
+        </nav>
+        <div class="advanced-title">
+            <p>Advanced Search</p>
+        </div>
+        <form methog="get" class="form-advanced" action="https://google.com/search">
+            
+            <label for="all">Find pages with... </label><input type="text" class="form-text-edge" autocomplete="off" name="as_q" id="all"> <label>"All these words" </label><br>
+            <br>
+            <label for="this">Find pages with... </label><input type="text" class="form-text-edge" autocomplete="off" name="as_epq" id="this"> <label>"This exact word or phrase" </label><br>
+            <br>
+            <label for="any">Find pages with... </label><input type="text" class="form-text-edge" autocomplete="off" name="as_oq" id="any"> <label>"Any of these words" </label><br>
+            <br>
+            <label for="none">Find pages with... </label><input type="text" class="form-text-edge" autocomplete="off" name="as_eq" id="none"> <label>"None of these words" </label><br>
+            <br>
+            <input type="submit" class="advanced-search-button center" value="Advanced Search">
+        </form>
+    </body>
+</html>
