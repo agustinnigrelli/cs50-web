@@ -79,6 +79,11 @@ def entry (request):
                 
     return render(request, "encyclopedia/entry.html")
 
+def edit (request):
+    """Edit an existing entry"""
+
+    return render(request, "encyclopedia/edit.html")
+
 def random_page(request):
     """Redirect to a random page"""
 

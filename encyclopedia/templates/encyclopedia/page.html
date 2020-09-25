@@ -15,4 +15,5 @@ Encyclopedia: {{ title }}
         </div>
     {% endfor %}
     {{ entry | markdown | safe}}
+    <a href="{% url 'edit' %}">Edit entry</a>
 {% endblock %}
