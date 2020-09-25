@@ -1,0 +1,25 @@
+{% extends "encyclopedia/layout.html" %}
+
+{% block title %}
+    Encyclopedia: Edit entry
+{% endblock %}
+
+{% block body %}
+
+    {% for message in messages %}
+        <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {{ message | safe }}
+        </div>
+    {% endfor %}
+
+    <h1>Edit entry: {{ title }}</h1>
+    <form action="/entry/" method="POST" name="entryform">
+        {% csrf_token %}
+        <textarea class="search" name="newcontent" id="newcontent" autocomplete="off" placeholder="Description..." style="height:400px; width:400px"></textarea><br>
+        <small>For styling or linking please user MarkDown notation.</small><br>
+        <input type="submit" class="btn btn-secondary" value="Save">
+    </form>
+{% endblock %}
