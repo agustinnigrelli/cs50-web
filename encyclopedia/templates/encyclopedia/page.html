@@ -1,0 +1,18 @@
+{% extends "encyclopedia/layout.html" %}
+{% load markdown_extras %}
+
+{% block title %}
+Encyclopedia: {{ title }}
+{% endblock %}
+
+{% block body %}
+    {% for message in messages %}
+        <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {{ message | safe }}
+        </div>
+    {% endfor %}
+    {{ entry | markdown | safe}}
+{% endblock %}
