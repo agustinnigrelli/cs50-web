@@ -15,5 +15,9 @@ Encyclopedia: {{ title }}
         </div>
     {% endfor %}
     {{ entry | markdown | safe}}
-    <a href="{% url 'edit' %}">Edit entry</a>
+    <form action="/edit/" method="POST" name="entryedit">
+    {% csrf_token %}
+    <input type="hidden" name="title" id="title" value="{{ title }}">
+    <input type="submit" class="btn btn-secondary" value="Edit entry">
+    </form>
 {% endblock %}

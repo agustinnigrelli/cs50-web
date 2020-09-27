@@ -16,9 +16,10 @@
     {% endfor %}
 
     <h1>Edit entry: {{ title }}</h1>
-    <form action="/entry/" method="POST" name="entryform">
+    <form action="/save/" method="POST" name="entryform">
         {% csrf_token %}
-        <textarea class="search" name="newcontent" id="newcontent" autocomplete="off" placeholder="Description..." style="height:400px; width:400px"></textarea><br>
+        <input type="hidden" name="title" id="title" value="{{ title }}">
+        <textarea class="search" name="editedcontent" id="editedcontent" autocomplete="off" style="height:400px; width:400px">{{ content }}</textarea><br>
         <small>For styling or linking please user MarkDown notation.</small><br>
         <input type="submit" class="btn btn-secondary" value="Save">
     </form>
