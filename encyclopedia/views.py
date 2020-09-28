@@ -18,38 +18,50 @@ def index(request):
         "entries": util.list_entries(),
     })
 
-def page(request, title):
-    """Render requested page"""
-
+def search(request):
+    """Render a page or a search-results page if there is a substring match"""
+        
     # User reached route via POST (as submitting a form via POST)
     if request.method == "POST":
         query = request.POST.get("q")
         entry = util.get_entry(query)
+        
+        # look for substring matches
         if not entry:
-            return render(request, "encyclopedia/page.html", {
-                "title": "404",
-                "entry": "<h1>Page not found<h1>",
+            entries = util.list_entries()
+            matches = []
+            matches.clear()
+                       
+            for entry in entries:
+                if query.lower() in entry.lower():
+                    matches.append(entry)
+              
+            return render(request, "encyclopedia/search.html", {
+                "entries": matches
             })
+
+        # render entry page
         else:
             entry = md.convert(entry)
             return render(request, "encyclopedia/page.html", {
                 "title": query.capitalize(),
                 "entry": entry,
             })
+
+
+def page(request, title):
+    """Render requested page"""
+
+    # Look for prompted title in the entry registry
+    entry = util.get_entry(title)
+    if not entry:
+        return render(request, "encyclopedia/notfound.html")
     else:
-        # Look for prompted title in the entry registry
-        entry = util.get_entry(title)
-        if not entry:
-            return render(request, "encyclopedia/page.html", {
-                "title": "404",
-                "entry": "<h1>Page not found<h1>"
-            })
-        else:
-            entry = md.convert(entry)
-            return render(request, "encyclopedia/page.html", {
-                "title": title.capitalize(),
-                "entry": entry
-            })
+        entry = md.convert(entry)
+        return render(request, "encyclopedia/page.html", {
+            "title": title.capitalize(),
+            "entry": entry
+        })
 
 def entry (request):
     """Create a new entry"""
@@ -99,7 +111,7 @@ def save(request):
     if request.method =="POST":
         title = request.POST.get("title")
         editedcontent = request.POST.get("editedcontent")
-        
+
         # Write new file with same title and different content
         with open("entries/" + title.capitalize() + ".md", "w", newline="") as file:
             file.seek(0)
