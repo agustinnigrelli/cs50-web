@@ -4,11 +4,12 @@
     <h1> Create new auction listing </h1>
 
     <form action="/create" method="post">
-    {% csrf_token %}
-    <select name="select_category">
-        {% for category in categories %}
-            <option value="{{category}}">{{category}}</option>
-        {% endfor %}
+        {% csrf_token %}
+        <select name="select_category">
+            {% for category in categories %}
+                <option value="{{category.id}}">{{category}}</option>
+            {% endfor %}
+        </select>
         <input type="text" name="title" id="title" autocomplete="off" placeholder="Title">
         <input type="url" name="image" id="image" autocomplete="off" placeholder="Image url">
         <textarea name="description" id="description" autocomplete="off" placeholder="Brief description of your product..."></textarea>

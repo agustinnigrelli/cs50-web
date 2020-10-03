@@ -2,14 +2,16 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse
 import datetime
 
 from .models import User, Categories, Listings, Bids, Comments, Watchlist
 
 def index(request):
-    return render(request, "auctions/index.html")
+    return render(request, "auctions/index.html", {
+        "listings": Listings.objects.all()
+    })
 
 
 def login_view(request):
@@ -66,16 +68,18 @@ def register(request):
 @login_required
 def create(request):
     if request.method == "POST":
-        creator = request.user.username   # VER PORQUE SOLO ACEPTA ID Y NO STRINGS
-        category_id = request.POST.get("select_category")
+        creator = User.objects.get(pk=request.user.id)
+        category_id = Categories.objects.get(pk=request.POST["select_category"])
         title = request.POST.get("title")
         description = request.POST.get("description")
         image = request.POST.get("image")
-        starting_bid = request.POST.get("starting_bid")
+        starting_bid = float(request.POST.get("starting_bid"))
         listing_time = datetime.datetime.now()
 
-        listings = Listings(creator, category_id, title, description, image, starting_bid, listing_time)
+        listings = Listings(creator=creator, category_id=category_id, title=title, description=description, image=image, starting_bid=starting_bid, listing_time=listing_time)
         listings.save()
+        
+        return redirect("index")
 
 
     return render(request, "auctions/create.html", {
