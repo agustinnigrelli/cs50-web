@@ -4,9 +4,10 @@
     <h2>Active Listings</h2>
     {%for listing in listings%}
         <div>
-            <h4>{{listing.title}}</h4>
+            <a href="{% url 'listing' listing.id %}"><h4>{{listing.title}}</h4></a>
             <img src="{{listing.image}}" style="max-width:300px; max-height:300px">
             <p>Description: {{listing.description}}</p>
+            <p>Current price: ${{listing.current_bid}}
         </div>
     {% endfor %}
 {% endblock %}

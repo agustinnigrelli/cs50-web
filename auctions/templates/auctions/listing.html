@@ -1,0 +1,38 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h1>{{listing.title}}</h1>
+    <p>Auctioner: {{listing.creator}}</p>
+    <p>Created on: {{listing.listing_time}}</p>
+    <div>
+        <img src="{{listing.image}}" style="max-width:600px; max-height:600px">
+        <p>Description: {{listing.description}}</p>
+        <p>Current price: ${{listing.current_bid}}</p>
+        <div>
+            <form action="bid/" method="post">
+                {% csrf_token %}
+                <label for="new_bid">Place a new bid</label>
+                <input type="numeric" name="new_bid" id="new_bid" autocomplete="off">
+                <input type="submit" value="Bid">
+            </form>
+        </div>
+    </div>
+    <h2>Comments</h2>  
+    {% for comment in comments %}
+        <div>
+            <p>{{comment.commenter}} commented on {{comment.comment_time}}:</p>
+            <p>{{comment.comment}}<p>
+        </div>
+        {% empty %}
+        <p>No comments yet</p>
+    {% endfor %}
+    <div>
+        <form action="/comment" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="listing_id" id="listing_id" value="{{listing.id}}">
+            <label for="comment">Leave a comment</label>
+            <textarea name="comment" id="comment" autocomplete="off" placeholder="Tell others your experience with this product"></textarea>
+            <small>Max. 100 characters</small>
+            <input type="submit" value="Send">
+        </form>
+{% endblock %}

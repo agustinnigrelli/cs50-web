@@ -17,7 +17,7 @@ class Listings(models.Model):
     title = models.CharField(max_length=50)
     description =  models.CharField(max_length=300)
     image = models.URLField(null=True)
-    starting_bid = models.FloatField(max_length=50)
+    current_bid = models.FloatField(max_length=50)
     listing_time = models.DateField()
 
     def __str__(self):

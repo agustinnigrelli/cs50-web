@@ -76,7 +76,7 @@ def create(request):
         starting_bid = float(request.POST.get("starting_bid"))
         listing_time = datetime.datetime.now()
 
-        listings = Listings(creator=creator, category_id=category_id, title=title, description=description, image=image, starting_bid=starting_bid, listing_time=listing_time)
+        listings = Listings(creator=creator, category_id=category_id, title=title, description=description, image=image, current_bid=starting_bid, listing_time=listing_time)
         listings.save()
         
         return redirect("index")
@@ -85,3 +85,29 @@ def create(request):
     return render(request, "auctions/create.html", {
         "categories": Categories.objects.all()
     })
+
+@login_required
+def listing(request, listing_id):
+    
+    if listing_id == Comments.listing:  #Revisar esto cuando se hagan comentarios
+        comments = listing_id.commented.filter(active=True)
+    else:
+        comments = None
+
+    return render(request, "auctions/listing.html", {
+        "listing": Listings.objects.get(pk=listing_id),
+        "comments": comments
+    })
+
+@login_required
+def comment(request):
+    if request.method == "POST":
+        commenter = User.objects.get(pk=request.user.id)
+        listing = Listings.objects.get(pk=request.POST["listing_id"])
+        comment = request.POST.get("comment")
+        comment_time = datetime.datetime.now()
+
+        comments = Comments(commenter=commenter, listing=listing, comment=comment, comment_time=comment_time)
+        comments.save()
+
+    return redirect("listing", listing_id=listing.id)
