@@ -86,20 +86,33 @@ def create(request):
         "categories": Categories.objects.all()
     })
 
-@login_required
 def listing(request, listing_id):
     
-    if listing_id == Comments.listing:  #Revisar esto cuando se hagan comentarios
-        comments = listing_id.commented.filter(active=True)
-    else:
-        comments = None
+
+    comments = Comments.objects.filter(listing=listing_id)
 
     return render(request, "auctions/listing.html", {
         "listing": Listings.objects.get(pk=listing_id),
         "comments": comments
     })
 
-@login_required
+def bid(request):
+    if request.method == "POST":
+        bidder = User.objects.get(pk=request.user.id)
+        listing = Listings.objects.get(pk=request.POST["listing_id"])
+        new_bid = request.POST.get("new_bid")
+        bid_time = datetime.datetime.now()
+
+        #Chequear bien si esto funciona
+        current_bid = Listings.current_bid.filter(listing=request.POST["listing_id"])
+        if new_bid > current_bid:
+            bids = Bids(bidder=bidder, listing=listing, new_bid=new_bid, bid_time=bid_time)
+            bids.save()        
+            #Agregar reemplazo para Listing.current_bid
+        else:
+            #Agregar mensaje de error
+            pass
+
 def comment(request):
     if request.method == "POST":
         commenter = User.objects.get(pk=request.user.id)

@@ -9,12 +9,16 @@
         <p>Description: {{listing.description}}</p>
         <p>Current price: ${{listing.current_bid}}</p>
         <div>
-            <form action="bid/" method="post">
-                {% csrf_token %}
-                <label for="new_bid">Place a new bid</label>
-                <input type="numeric" name="new_bid" id="new_bid" autocomplete="off">
-                <input type="submit" value="Bid">
-            </form>
+            {% if user.is_authenticated %}
+                <form action="bid/" method="post">
+                    {% csrf_token %}
+                    <label for="new_bid">Place a new bid</label>
+                    <input type="numeric" name="new_bid" id="new_bid" autocomplete="off">
+                    <input type="submit" value="Bid">
+                </form>
+            {% else %}
+                <p>To place a new bid you must first <a href="{% url 'login' %}">Log in</a></p>
+            {% endif %}
         </div>
     </div>
     <h2>Comments</h2>  
@@ -27,12 +31,16 @@
         <p>No comments yet</p>
     {% endfor %}
     <div>
-        <form action="/comment" method="post">
-            {% csrf_token %}
-            <input type="hidden" name="listing_id" id="listing_id" value="{{listing.id}}">
-            <label for="comment">Leave a comment</label>
-            <textarea name="comment" id="comment" autocomplete="off" placeholder="Tell others your experience with this product"></textarea>
-            <small>Max. 100 characters</small>
-            <input type="submit" value="Send">
-        </form>
+        {% if user.is_authenticated %}
+            <form action="/comment" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="listing_id" id="listing_id" value="{{listing.id}}">
+                <label for="comment">Leave a comment</label>
+                <textarea name="comment" id="comment" autocomplete="off" placeholder="Tell others your experience with this product"></textarea>
+                <small>Max. 100 characters</small>
+                <input type="submit" value="Send">
+            </form>
+        {% else %}
+            <p>To comment you must first <a href="{% url 'login' %}">Log in</a></p>
+        {% endif %}
 {% endblock %}
