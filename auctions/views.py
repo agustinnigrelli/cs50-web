@@ -98,8 +98,10 @@ def listing(request, listing_id):
 
 def bid(request):
     if request.method == "POST":
+        listing_id = request.POST["listing_id"]
+
         bidder = User.objects.get(pk=request.user.id)
-        listing = Listings.objects.get(pk=request.POST["listing_id"])
+        listing = Listings.objects.get(pk=listing_id)
         new_bid = request.POST.get("new_bid")
         bid_time = datetime.datetime.now()
 
@@ -107,11 +109,16 @@ def bid(request):
         current_bid = Listings.current_bid.filter(listing=request.POST["listing_id"])
         if new_bid > current_bid:
             bids = Bids(bidder=bidder, listing=listing, new_bid=new_bid, bid_time=bid_time)
-            bids.save()        
-            #Agregar reemplazo para Listing.current_bid
+            bids.save()
+
+            listings = Listings(current_bid=new_bid)
+            listings.save()
+
+            return redirect("listings", listing_id=listing_id)
         else:
-            #Agregar mensaje de error
             pass
+            
+            
 
 def comment(request):
     if request.method == "POST":
