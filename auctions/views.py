@@ -85,14 +85,14 @@ def create(request):
 
     return render(request, "auctions/create.html", {
         "categories": Categories.objects.all()
-    })
+        })
 
 def listing(request, listing_id):
 
     return render(request, "auctions/listing.html", {
         "listing": Listings.objects.get(pk=listing_id),
         "comments": Comments.objects.filter(listing=listing_id)
-    })
+        })
 
 def bid(request):
     if request.method == "POST":
@@ -101,8 +101,6 @@ def bid(request):
         listing = Listings.objects.get(pk=request.POST["bid_listing_id"])
         new_bid = request.POST.get("new_bid")
         bid_time = datetime.datetime.now()
-
-        #Chequear bien si esto funciona
         
         if float(new_bid) > float(listing.current_bid):
             bids = Bids(bidder=bidder, listing=listing, bid=new_bid, bid_time=bid_time)
@@ -110,16 +108,14 @@ def bid(request):
 
             listing.current_bid = new_bid
             listing.save()
-            
+
             return redirect("listing", listing_id=listing.id)
         else:
             messages.error(request, "Bid must be higher than the current price. Please make a new bid")
             return render(request, "auctions/listing.html", {
         "listing": Listings.objects.get(pk=request.POST["bid_listing_id"]),
         "comments": Comments.objects.filter(listing=request.POST["bid_listing_id"])
-    })
-            
-            
+        })          
 
 def comment(request):
     if request.method == "POST":
@@ -132,3 +128,34 @@ def comment(request):
         comments.save()
 
     return redirect("listing", listing_id=listing.id)
+
+def watchlist(request):
+    if request.method == "POST":
+        add = request.POST.get("add")
+        remove = request.POST.get("remove")
+
+        if add:
+            if Watchlist.objects.filter(listing=request.POST["add_listing_id"]):
+                messages.error(request, "This listing is already in your watchlist")
+                return render(request, "auctions/listing.html", {
+                    "listing": Listings.objects.get(pk=request.POST["add_listing_id"]),
+                    "comments": Comments.objects.filter(listing=request.POST["add_listing_id"])
+                    })   
+        
+            else:
+                watcher = User.objects.get(pk=request.user.id)
+                listing = Listings.objects.get(pk=request.POST["add_listing_id"])
+
+                watchlist = Watchlist(watcher=watcher, listing=listing)
+                watchlist.save()
+        
+        if remove:
+            Watchlist.objects.get(listing=request.POST["remove_listing_id"]).delete()   
+
+    return render(request, "auctions/watchlist.html", {
+        "items" : Watchlist.objects.filter(watcher=request.user.id)
+        })
+
+        
+
+            

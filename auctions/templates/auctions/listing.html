@@ -12,6 +12,15 @@
     {% endfor %}
 
     <h1>{{listing.title}}</h1>
+    {% if user.is_authenticated %}
+        <form action="/watchlist" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="add" id="add" value="add">
+            <input type="hidden" name="add_listing_id" id="add_listing_id" value="{{listing.id}}">
+            <input type="submit" value="Watchlist +">
+        </form>
+    {% endif %}
+    
     <p>Auctioner: {{listing.creator}}</p>
     <p>Created on: {{listing.listing_time}}</p>
     <div>

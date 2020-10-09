@@ -39,12 +39,11 @@ class Comments(models.Model):
     comment_time = models.DateField()
 
     def __str__(self):
-        return f"User {self.commenter} commented '{self.comment}' in {self.listing} at {self.comment_time}"
+        return f"User {self.commenter} commented '{self.comment}' in {self.listing.title} at {self.comment_time}"
 
 class Watchlist(models.Model):
     watcher = models.ForeignKey(User, related_name="watcher", on_delete=models.CASCADE)
     listing = models.ForeignKey(Listings, related_name="listing", on_delete=models.CASCADE)
-    current_bid = models.ForeignKey(Bids, related_name="current_bid", on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"User {self.watcher} is watching {self.listing}. Highest bid is {self.current_bid}"
+        return f"User {self.watcher} is watching {self.listing.title}"
