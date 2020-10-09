@@ -30,7 +30,7 @@ class Bids(models.Model):
     bid_time = models.DateField()
 
     def __str__(self):
-        return f"User {self.bidder} bidded ${self.bid} in {self.listing} at {self.bid_time}"
+        return f"User {self.bidder} bidded ${self.bid} in '{self.listing.title}' of {self.listing.creator} at {self.bid_time}"
 
 class Comments(models.Model):
     commenter = models.ForeignKey(User, related_name="commenter", on_delete=models.CASCADE)

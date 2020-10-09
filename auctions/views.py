@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
@@ -87,43 +88,43 @@ def create(request):
     })
 
 def listing(request, listing_id):
-    
-
-    comments = Comments.objects.filter(listing=listing_id)
 
     return render(request, "auctions/listing.html", {
         "listing": Listings.objects.get(pk=listing_id),
-        "comments": comments
+        "comments": Comments.objects.filter(listing=listing_id)
     })
 
 def bid(request):
     if request.method == "POST":
-        listing_id = request.POST["listing_id"]
 
         bidder = User.objects.get(pk=request.user.id)
-        listing = Listings.objects.get(pk=listing_id)
+        listing = Listings.objects.get(pk=request.POST["bid_listing_id"])
         new_bid = request.POST.get("new_bid")
         bid_time = datetime.datetime.now()
 
         #Chequear bien si esto funciona
-        current_bid = Listings.current_bid.filter(listing=request.POST["listing_id"])
-        if new_bid > current_bid:
-            bids = Bids(bidder=bidder, listing=listing, new_bid=new_bid, bid_time=bid_time)
+        
+        if float(new_bid) > float(listing.current_bid):
+            bids = Bids(bidder=bidder, listing=listing, bid=new_bid, bid_time=bid_time)
             bids.save()
 
-            listings = Listings(current_bid=new_bid)
-            listings.save()
-
-            return redirect("listings", listing_id=listing_id)
+            listing.current_bid = new_bid
+            listing.save()
+            
+            return redirect("listing", listing_id=listing.id)
         else:
-            pass
+            messages.error(request, "Bid must be higher than the current price. Please make a new bid")
+            return render(request, "auctions/listing.html", {
+        "listing": Listings.objects.get(pk=request.POST["bid_listing_id"]),
+        "comments": Comments.objects.filter(listing=request.POST["bid_listing_id"])
+    })
             
             
 
 def comment(request):
     if request.method == "POST":
         commenter = User.objects.get(pk=request.user.id)
-        listing = Listings.objects.get(pk=request.POST["listing_id"])
+        listing = Listings.objects.get(pk=request.POST["com_listing_id"])
         comment = request.POST.get("comment")
         comment_time = datetime.datetime.now()
 
