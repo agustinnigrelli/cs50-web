@@ -75,9 +75,10 @@ def create(request):
         description = request.POST.get("description")
         image = request.POST.get("image")
         starting_bid = float(request.POST.get("starting_bid"))
+        activity = "open"
         listing_time = datetime.datetime.now()
 
-        listings = Listings(creator=creator, category_id=category_id, title=title, description=description, image=image, current_bid=starting_bid, listing_time=listing_time)
+        listings = Listings(creator=creator, category_id=category_id, title=title, description=description, image=image, current_bid=starting_bid, activity=activity, listing_time=listing_time)
         listings.save()
         
         return redirect("index")
@@ -89,10 +90,29 @@ def create(request):
 
 def listing(request, listing_id):
 
-    return render(request, "auctions/listing.html", {
-        "listing": Listings.objects.get(pk=listing_id),
-        "comments": Comments.objects.filter(listing=listing_id)
-        })
+    listing = Listings.objects.get(pk=listing_id)
+
+    if listing.activity == "closed":
+        bids = Bids.objects.get(bid=listing.current_bid)
+        
+        return render(request, "auctions/listing.html", {
+            "listing": Listings.objects.get(pk=listing_id),
+            "comments": Comments.objects.filter(listing=listing_id),
+            "bids" : bids
+            })
+
+    if request.user == listing.creator:
+        return render(request, "auctions/listing.html", {
+            "listing": Listings.objects.get(pk=listing_id),
+            "comments": Comments.objects.filter(listing=listing_id),
+            "owner" : "yes"
+            })
+    else:
+        return render(request, "auctions/listing.html", {
+            "listing": Listings.objects.get(pk=listing_id),
+            "comments": Comments.objects.filter(listing=listing_id),
+            "owner" : "no"
+            })
 
 def bid(request):
     if request.method == "POST":
@@ -156,6 +176,28 @@ def watchlist(request):
         "items" : Watchlist.objects.filter(watcher=request.user.id)
         })
 
+def categories(request):
+
+    return render(request, "auctions/categories.html", {
+        "categories" : Categories.objects.all()
+    })
+
+def category(request, category_id):
+
+    return render(request, "auctions/categories/category.html", {
+        "listings" : Listings.objects.filter(category_id=category_id),
+        "category" : Categories.objects.get(pk=category_id)
+    })
+
+def close(request):
+
+    if request.method == "POST":
+        
+        listing = Listings.objects.get(pk=request.POST["close_listing_id"])
+        listing.activity = request.POST.get("close")
+        listing.save()
+    
+    return redirect("listing", listing_id=listing.id)
         
 
             

@@ -1,7 +1,7 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Active Listings</h2>
+    <h2>Category: {{category.category}}</h2>
     {%for listing in listings%}
         <div>
             {% if listing.activity == "open" %}
@@ -12,6 +12,6 @@
             {% endif %}
         </div>
         {% empty %}
-        <p>No listings yet</p>
+        <p>No listings in this category yet</p>
     {% endfor %}
 {% endblock %}

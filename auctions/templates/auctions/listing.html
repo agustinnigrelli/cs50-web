@@ -11,7 +11,11 @@
         </div>
     {% endfor %}
 
-    <h1>{{listing.title}}</h1>
+    {% if listing.activity == "open" %}
+        <h1>{{listing.title}}</h1>
+    {% else %}
+        <h1>{{listing.title}} (Closed)</h1>
+    {% endif %}
     {% if user.is_authenticated %}
         <form action="/watchlist" method="post">
             {% csrf_token %}
@@ -19,6 +23,16 @@
             <input type="hidden" name="add_listing_id" id="add_listing_id" value="{{listing.id}}">
             <input type="submit" value="Watchlist +">
         </form>
+        {% if owner == "yes" %}
+            {% if listing.activity == "open" %}
+                <form action="/close" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="close" id="close" value="closed">
+                    <input type="hidden" name="close_listing_id" id="close_listing_id" value="{{listing.id}}">
+                    <input type="submit" value="Close">
+                </form>
+            {% endif %}
+        {% endif %}
     {% endif %}
     
     <p>Auctioner: {{listing.creator}}</p>
@@ -29,13 +43,17 @@
         <p>Current price: ${{listing.current_bid}}</p>
         <div>
             {% if user.is_authenticated %}
-                <form action="/bid" method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="bid_listing_id" id="bid_listing_id" value="{{listing.id}}">
-                    <label for="new_bid">Place a new bid</label>
-                    <input type="numeric" name="new_bid" id="new_bid" autocomplete="off">
-                    <input type="submit" value="Bid">
-                </form>
+                {% if listing.activity == "open" %}
+                    <form action="/bid" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="bid_listing_id" id="bid_listing_id" value="{{listing.id}}">
+                        <label for="new_bid">Place a new bid</label>
+                        <input type="numeric" name="new_bid" id="new_bid" autocomplete="off">
+                        <input type="submit" value="Bid">
+                    </form>
+                {% else %}    
+                    <p>Listing closed: {{bids.bidder}} won the auction with a bid of ${{listing.current_bid}}</p>
+                {% endif %}
             {% else %}
                 <p>To place a new bid you must first <a href="{% url 'login' %}">Log in</a></p>
             {% endif %}
