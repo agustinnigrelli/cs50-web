@@ -2,16 +2,24 @@
 
 {% block body %}
     <h2>Active Listings</h2>
-    {%for listing in listings%}
-        <div>
-            {% if listing.activity == "open" %}
-                <a href="{% url 'listing' listing.id %}"><h4>{{listing.title}}</h4></a>
-                <img src="{{listing.image}}" style="max-width:300px; max-height:300px">
-                <p>Description: {{listing.description}}</p>
-                <p>Current price: ${{listing.current_bid}}
-            {% endif %}
-        </div>
-        {% empty %}
-        <p>No listings yet</p>
-    {% endfor %}
+    <div class="wrapper">
+        {%for listing in listings%}
+            <div class="wrap-item">
+                {% if listing.activity == "open" %}
+                    <div class="wrap-title">
+                        <a href="{% url 'listing' listing.id %}"><h4>{{listing.title}}</h4></a>
+                    </div>
+                    <div class="wrap-image">
+                        <img src="{{listing.image}}" style="max-width:300px; max-height:300px">
+                    </div>
+                    <div class="wrap-text">
+                        <p><strong>Description:</strong> {{listing.description}}</p>
+                        <p><strong>Current price:</strong> ${{listing.current_bid}}
+                    </div>
+                {% endif %}
+            </div>
+            {% empty %}
+            <p>No listings yet</p>
+        {% endfor %}
+    </div>
 {% endblock %}
