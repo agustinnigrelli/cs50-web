@@ -1,13 +1,16 @@
 {% extends "auctions/layout.html" %}
 
+{% block title %}Active listings {% endblock %}
+
 {% block body %}
     <h2>Active Listings</h2>
+    <hr>
     <div class="wrapper">
         {%for listing in listings%}
-            <div class="wrap-item">
+            <div class="wrap-item shadow">
                 {% if listing.activity == "open" %}
                     <div class="wrap-title">
-                        <a href="{% url 'listing' listing.id %}"><h4>{{listing.title}}</h4></a>
+                        <a class="link-color" href="{% url 'listing' listing.id %}"><h4>{{listing.title}}</h4></a>
                     </div>
                     <div class="wrap-image">
                         <img src="{{listing.image}}" style="max-width:300px; max-height:300px">

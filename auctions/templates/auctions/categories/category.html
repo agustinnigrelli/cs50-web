@@ -1,17 +1,28 @@
 {% extends "auctions/layout.html" %}
 
+{% block title %}{{category.category}}{% endblock %}
+
 {% block body %}
     <h2>Category: {{category.category}}</h2>
-    {%for listing in listings%}
-        <div>
-            {% if listing.activity == "open" %}
-                <a href="{% url 'listing' listing.id %}"><h4>{{listing.title}}</h4></a>
-                <img src="{{listing.image}}" style="max-width:300px; max-height:300px">
-                <p>Description: {{listing.description}}</p>
-                <p>Current price: ${{listing.current_bid}}
-            {% endif %}
-        </div>
-        {% empty %}
-        <p>No listings in this category yet</p>
-    {% endfor %}
+    <hr>
+    <div class="wrapper">
+        {%for listing in listings%}
+            <div class="wrap-item shadow">
+                {% if listing.activity == "open" %}
+                    <div class="wrap-title">
+                        <a class="link-color" href="{% url 'listing' listing.id %}"><h4>{{listing.title}}</h4></a>
+                    </div>
+                    <div class="wrap-image">
+                        <img src="{{listing.image}}" style="max-width:300px; max-height:300px">
+                    </div>
+                    <div class="wrap-text">
+                        <p><strong>Description:</strong> {{listing.description}}</p>
+                        <p><strong>Current price:</strong> ${{listing.current_bid}}
+                    </div>
+                {% endif %}
+            </div>
+            {% empty %}
+            <h4>No listings yet</h4>
+        {% endfor %}
+    </div>
 {% endblock %}
