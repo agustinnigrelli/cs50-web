@@ -55,6 +55,7 @@ body {
     color: darkgray;
     text-emphasis: none;
     text-emphasis-color: black;
+    margin: auto;
 }
 
 a:hover {
