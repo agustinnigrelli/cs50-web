@@ -23,7 +23,11 @@ body {
 }
 
 .wrap-title {
-    text-align: center;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+
 }
 
 .wrap-image {
@@ -56,4 +60,8 @@ body {
 a:hover {
     color: black;
     text-decoration: none;
+}
+a {
+    display: inline-block;
+    line-height: 1em;
 }

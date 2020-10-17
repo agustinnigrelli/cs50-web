@@ -4,22 +4,34 @@
 
 {% block body %}
     <h2>Watchlist</h2>
-    {% for item in items %}
-        <div>
-            <a href="{% url 'listing' item.listing.id %}"><h4>{{item.listing.title}}</h4></a>
-            <img src="{{item.listing.image}}" style="max-width:300px; max-height:300px">
-            <p>Description: {{item.listing.description}}</p>
-            <p>Current price: ${{item.listing.current_bid}}
-            {% if user.is_authenticated %}
-                <form action="/watchlist" method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="remove" id="remove" value="remove">
-                    <input type="hidden" name="remove_listing_id" id="remove_listing_id" value="{{item.listing.id}}">
-                    <input type="submit" value="Remove">
-                </form>
-            {% endif %}
-        </div>
-        {% empty %}
-        <p>No listings added to watchlist yet</p>
-    {% endfor %}
+    <div class="wrapper">
+        {% for item in items %}
+            <div class="wrap-item shadow">
+                <div class="wrap-title">
+                    <div style="margin:auto; z-index:0;">
+                    <a class="link-color" href="{% url 'listing' item.listing.id %}"><h4>{{item.listing.title}}</h4></a>          
+                    </div>
+                    {% if user.is_authenticated %}
+                        <div style="position:absolute; transform:translate(700%,0%); z-index:1;">
+                        <form action="/watchlist" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="remove" id="remove" value="remove">
+                            <input type="hidden" name="remove_listing_id" id="remove_listing_id" value="{{item.listing.id}}">
+                            <button type="submit" class="btn btn-dark"><i class="fa fa-trash"></i></button>
+                        </form>
+                        </div> 
+                    {% endif %}
+                </div>
+                <div class="wrap-image">
+                    <img src="{{item.listing.image}}" style="max-width:300px; max-height:300px">
+                </div>
+                <div class="wrap-text">
+                    <p><strong>Description:</strong> {{item.listing.description}}</p>
+                    <p><strong>Current price:</strong> ${{item.listing.current_bid}}</p>
+                </div>
+            </div>
+            {% empty %}
+            <p>No listings added to watchlist yet</p>
+        {% endfor %}
+    </div>
 {% endblock %}
