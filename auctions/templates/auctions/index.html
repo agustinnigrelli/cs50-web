@@ -7,8 +7,8 @@
     <hr>
     <div class="wrapper">
         {%for listing in listings%}
-            <div class="wrap-item shadow">
-                {% if listing.activity == "open" %}
+            {% if listing.activity == "open" %}
+                <div class="wrap-item shadow">
                     <div class="wrap-title">
                         <a class="link-color" href="{% url 'listing' listing.id %}"><h4>{{listing.title}}</h4></a>
                     </div>
@@ -17,10 +17,11 @@
                     </div>
                     <div class="wrap-text">
                         <p><strong>Description:</strong> {{listing.description}}</p>
-                        <p><strong>Current price:</strong> ${{listing.current_bid}}
+                        <p><strong>Current price:</strong> ${{listing.current_bid}}</p>
                     </div>
-                {% endif %}
-            </div>
+                </div>
+            {% endif %}
+            
             {% empty %}
             <p>No listings yet</p>
         {% endfor %}

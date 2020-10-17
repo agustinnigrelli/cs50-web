@@ -1,11 +1,14 @@
 {% extends "auctions/layout.html" %}
 
+{% load static %}
+
 {% block title %}Register{% endblock %}
 
 {% block body %}
 
-    <h2>Register</h2>
-
+    <center><h2>Buying and selling has never been so easy!</h2><center>
+    <div style="display:flex">
+        <div class="login-box" style:"float:left">
     {% if message %}
         <div>{{ message }}</div>
     {% endif %}
@@ -24,9 +27,14 @@
         <div class="form-group">
             <input class="form-control" type="password" name="confirmation" placeholder="Confirm Password">
         </div>
-        <input class="btn btn-primary" type="submit" value="Register">
+        <input class="btn btn-secondary" type="submit" value="Register">
     </form>
-
-    Already have an account? <a href="{% url 'login' %}">Log In here.</a>
+    <br>
+    <small>Already have an account? <a href="{% url 'login' %}">Log In here.</a></small>
+    </div>
+        <div class="login-box" style:"float:right">
+            <img src="{% static 'auctions/loginpic.png' %}" style="max-width:500px; max-height:500px;">
+        </div>
+    </div>
 
 {% endblock %}
