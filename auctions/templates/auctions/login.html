@@ -6,10 +6,10 @@
 
 {% block body %}
 
-    <center><h2>Buying and selling has never been so easy!</h2><center>
+    <center><h2>Buying and selling has never been so easy!</h2></center>
     <br>
     <div style="display:flex">
-        <div class="form-box" style:"float:left">
+        <div class="form-box" style="float:left;">
             {% if message %}
                 <div style="text-align:left;">{{ message }}</div>
             {% endif %}       
@@ -26,7 +26,7 @@
             <br>
             <small>Don't have an account? <a href="{% url 'register' %}">Register here.</a></small>
         </div>
-        <div class="form-box" style:"float:right">
+        <div class="form-box" style="float:right;">
             <img src="{% static 'auctions/ecommerce.png' %}" style="max-width:500px; max-height:500px;">
         </div>
     </div>

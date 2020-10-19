@@ -6,9 +6,9 @@
 
 {% block body %}
     <h2> Create new auction listing </h2>
-    <hr>
+    <hr><br>
     <div style="display:flex">
-        <div class="form-box" style:"float:left">
+        <div class="form-box" style:"float:left;">
             <form action="/create" method="post">
                 {% csrf_token %}
                 <div class="form-group">
@@ -36,7 +36,7 @@
                 </div>
             </form>
         </div>
-        <div class="form-box" style:"float:right">
+        <div class="form-box" style:"float:right;">
             <img src="{% static 'auctions/loginpic.png' %}" style="max-width:500px; max-height:500px;">
         </div>
     </div>

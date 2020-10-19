@@ -5,82 +5,106 @@
 {% block body %}
 
     {% for message in messages %}
-        <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+        <div class="alert {{ message.tags }} alert-danger alert-dismissible" role="alert">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
             {{ message | safe }}
         </div>
     {% endfor %}
-
-    {% if listing.activity == "open" %}
-        <h1>{{listing.title}}</h1>
-    {% else %}
-        <h1>{{listing.title}} (Closed)</h1>
-    {% endif %}
-    {% if user.is_authenticated %}
-        <form action="/watchlist" method="post">
-            {% csrf_token %}
-            <input type="hidden" name="add" id="add" value="add">
-            <input type="hidden" name="add_listing_id" id="add_listing_id" value="{{listing.id}}">
-            <input type="submit" value="Watchlist +">
-        </form>
-        {% if owner == "yes" %}
-            {% if listing.activity == "open" %}
-                <form action="/close" method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="close" id="close" value="closed">
-                    <input type="hidden" name="close_listing_id" id="close_listing_id" value="{{listing.id}}">
-                    <input type="submit" value="Close">
-                </form>
-            {% endif %}
-        {% endif %}
-    {% endif %}
-    
-    <p>Auctioner: {{listing.creator}}</p>
-    <p>Created on: {{listing.listing_time}}</p>
-    <div>
-        <img src="{{listing.image}}" style="max-width:600px; max-height:600px">
-        <p>Description: {{listing.description}}</p>
-        <p>Current price: ${{listing.current_bid}}</p>
-        <div>
-            {% if user.is_authenticated %}
+    <div  class="round-edge shadow" style="margin:50px; padding:50px;">
+        <div class="wrap-title" style="margin:auto">
+            <div style="margin:auto; z-index:0;">
                 {% if listing.activity == "open" %}
-                    <form action="/bid" method="post">
-                        {% csrf_token %}
-                        <input type="hidden" name="bid_listing_id" id="bid_listing_id" value="{{listing.id}}">
-                        <label for="new_bid">Place a new bid</label>
-                        <input type="numeric" name="new_bid" id="new_bid" autocomplete="off">
-                        <input type="submit" value="Bid">
-                    </form>
-                {% else %}    
-                    <p>Listing closed: {{bids.bidder}} won the auction with a bid of ${{listing.current_bid}}</p>
+                    <h1>{{listing.title}}</h1>
+                {% else %}
+                    <h1>{{listing.title}} (Closed)</h1>
                 {% endif %}
-            {% else %}
-                <p>To place a new bid you must first <a href="{% url 'login' %}">Log in</a></p>
-            {% endif %}
+            </div>          
+            <div style="display:flex; position:relative; transform:translate(10%,0%); z-index:1;">
+                {% if user.is_authenticated %}
+                    <form action="/watchlist" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="add" id="add" value="add">
+                        <input type="hidden" name="add_listing_id" id="add_listing_id" value="{{listing.id}}">
+                        <button type="submit" class="btn btn-danger"><i class="fa fa-heart"></i></button>
+                    </form>
+                    {% if owner == "yes" %}
+                        {% if listing.activity == "open" %}
+                            <form action="/close" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="close" id="close" value="closed">
+                                <input type="hidden" name="close_listing_id" id="close_listing_id" value="{{listing.id}}">
+                                <input type="submit" class="btn btn-dark" value="Close">
+                            </form>
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+            </div>
         </div>
+
+        <div style="display:flex;">
+            <div class="form-box" style="float:left; text-align:justify;">
+                <p><strong>Auctioner:</strong> {{listing.creator}}</p>
+                <p><strong>Created on:</strong> {{listing.listing_time}}</p>
+                <p><strong>Description:</strong> {{listing.description}}</p>
+                <p><strong>Current price:</strong> ${{listing.current_bid}}</p>
+                <div>
+                    {% if user.is_authenticated %}
+                        {% if listing.activity == "open" %}
+                            <form action="/bid" class="form-group" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="bid_listing_id" id="bid_listing_id" value="{{listing.id}}">
+                                <label for="new_bid">Place a new bid</label>
+                                <input type="numeric" class="form-control" name="new_bid" id="new_bid" autocomplete="off">
+                                <small>Bids lower than current price will be rejected.</small>
+                                <br>
+                                <input type="submit" class="btn btn-secondary" style="text-align:right;" value="Bid">
+                            </form>
+                        {% else %}    
+                            <p><strong>Listing closed:</strong> <strong>{{bids.bidder}}</strong> won the auction with a bid of ${{listing.current_bid}}</p>
+                        {% endif %}
+                    {% else %}
+                        <p>To place a new bid you must first <a href="{% url 'login' %}">Log in</a></p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="form-box" style="float:right;">
+                <img src="{{listing.image}}" style="max-width:400px; max-height:400px">
+            </div>
+        </div>    
     </div>
-    <h2>Comments</h2>  
-    {% for comment in comments %}
+
+    <div style="margin:50px; padding:50px;">
         <div>
-            <p>{{comment.commenter}} commented on {{comment.comment_time}}:</p>
-            <p>{{comment.comment}}<p>
+            <h2>Comments</h2>
+            {% for comment in comments %}
+                <div>
+                    <p><strong>{{comment.commenter}}</strong> commented on <strong>{{comment.comment_time}}</strong>:</p>
+                    <li>{{comment.comment}}</li>
+                </div>
+                <hr>
+                {% empty %}
+                <div>
+                    <p>No comments yet</p>
+                </div>
+            {% endfor %}
         </div>
-        {% empty %}
-        <p>No comments yet</p>
-    {% endfor %}
-    <div>
         {% if user.is_authenticated %}
-            <form action="/comment" method="post">
+            <form action="/comment" class="form-group" method="post">
                 {% csrf_token %}
                 <input type="hidden" name="com_listing_id" id="com_listing_id" value="{{listing.id}}">
                 <label for="comment">Leave a comment</label>
-                <textarea name="comment" id="comment" autocomplete="off" placeholder="Tell others your experience with this product"></textarea>
+                <textarea class="form-control" name="comment" id="comment" autocomplete="off"></textarea>
                 <small>Max. 100 characters</small>
-                <input type="submit" value="Send">
+                <br>
+                <input type="submit" class="btn btn-secondary" value="Send">
             </form>
         {% else %}
             <p>To comment you must first <a href="{% url 'login' %}">Log in</a></p>
         {% endif %}
+
+    </div>
+    
+    </div>
 {% endblock %}
