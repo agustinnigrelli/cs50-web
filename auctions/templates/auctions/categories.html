@@ -5,11 +5,16 @@
 {% block body %}
     <h2>Categories</h2>
     <hr>
-    <ul>
-        {%for category in categories%}
-            <li>
+    <div class="wrapper" style="align-items: center; justify-content: center;">
+    {%for category in categories%}
+        <div class="wrap-item" style="width:250px;height:250px">
+            <div class="wrap-image">
+                <img src="{{category.image}}" style="max-width:200px; max-height:200px;">
+            </div>
+            <div class="wrap-text" style="width:200px; text-align: center;">
                 <a class="link-color" href="{% url 'category' category.id %}"><p>{{category}}</p></a>
-            </li>
-        {% endfor %}
-    </ul>
+            </div>         
+        </div>  
+    {% endfor %}
+    </div> 
 {% endblock %}

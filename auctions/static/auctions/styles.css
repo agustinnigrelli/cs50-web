@@ -6,16 +6,12 @@ body {
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
-    position: absolute;
+    position: relative;
 }
 
 .wrap-item {
     margin: 10px;
     padding: 20px;
-    border: solid lightgray;
-    border-width: 1px;
-    border-radius: 20px;
-    background-color: white;
     width: 350px;
     height: 500px;
     position: relative;
