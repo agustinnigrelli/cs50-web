@@ -155,7 +155,7 @@ def watchlist(request):
         remove = request.POST.get("remove")
 
         if add:
-            if Watchlist.objects.filter(listing=request.POST["add_listing_id"]):
+            if Watchlist.objects.filter(watcher=request.user.id, listing=request.POST["add_listing_id"]):
                 messages.error(request, "This listing is already in your watchlist")
                 return render(request, "auctions/listing.html", {
                     "listing": Listings.objects.get(pk=request.POST["add_listing_id"]),
@@ -170,7 +170,7 @@ def watchlist(request):
                 watchlist.save()
         
         if remove:
-            Watchlist.objects.get(listing=request.POST["remove_listing_id"]).delete()   
+            Watchlist.objects.get(watcher=request.user.id, listing=request.POST["remove_listing_id"]).delete()   
 
     return render(request, "auctions/watchlist.html", {
         "items" : Watchlist.objects.filter(watcher=request.user.id)
