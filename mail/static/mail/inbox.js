@@ -32,6 +32,7 @@ function load_mailbox(mailbox) {
   document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
 
   if (mailbox === 'inbox') {
+  
     fetch('/emails/inbox')
     .then(response => response.json())
     .then(emails => {
@@ -42,4 +43,46 @@ function load_mailbox(mailbox) {
   });
 
   }
+
+  if (mailbox === `${mail_id}`) {
+  
+    fetch(`/emails/${mail_id}`)
+    .then(response => response.json())
+    .then(email => {
+    // Print email
+    console.log(email);
+
+    // ... do something else with email ...
+  });
+
+  }
+
+  if (mailbox === 'sent') {
+    
+    fetch('/emails', {
+      method: 'POST',
+      body: JSON.stringify({
+          recipients: 'PONER EL MAIL',
+          subject: 'PONER EL ASUNTO',
+          body: 'PONER EL CUERPO'
+      })
+    })
+    .then(response => response.json())
+    .then(result => {
+        // Print result
+        console.log(result);
+    });
+
+  }
+
+  if (mailbox === 'archive') {
+
+    fetch(`/emails/${mail_id}`, {
+      method: 'PUT',
+      body: JSON.stringify({
+          archived: true
+      })
+    })
+  }
+
 }
