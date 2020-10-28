@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
   document.querySelector('#compose').addEventListener('click', compose_email);
 
   // By default, load the inbox
-  load_mailbox('inbox');
+    load_mailbox('inbox');
 });
 
 function compose_email() {
@@ -22,6 +22,32 @@ function compose_email() {
   document.querySelector('#compose-body').value = '';
 }
 
+// Submitting the form calls a function
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelector('#compose-form').onsubmit = function() {
+  
+    const recipients = document.querySelector('#compose-recipients').value;
+    const subject = document.querySelector('#compose-subject').value;
+    const body = document.querySelector('#compose-body').value;
+
+    fetch('/emails', {
+      method: 'POST',
+      body: JSON.stringify({
+          recipients: recipients,
+          subject: subject,
+          body: body
+      })
+    })
+    .then(response => response.json())
+    .then(result => {
+        // Print result
+        console.log(result);       
+    })
+    // Load sent tab when the mail is sent
+    .then(load_mailbox('sent'))
+  }
+})
+
 function load_mailbox(mailbox) {
   
   // Show the mailbox and hide other views
@@ -31,58 +57,65 @@ function load_mailbox(mailbox) {
   // Show the mailbox name
   document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
 
+  // Load the inbox tab
   if (mailbox === 'inbox') {
   
     fetch('/emails/inbox')
     .then(response => response.json())
     .then(emails => {
-    // Print emails
-    console.log(emails);
+      // Print emails in console
+      console.log(emails);
 
-    // ... do something else with emails ...
-  });
+      // Show emails in the inbox
+      emails.forEach(emails => {
 
-  }
+        const div = document.createElement('div');
+        if (emails.read === true) {
+          div.style.background = 'lightgray';
+        } else {
+          div.style.background = 'white';
+        }; 
 
-  if (mailbox === `${mail_id}`) {
-  
-    fetch(`/emails/${mail_id}`)
-    .then(response => response.json())
-    .then(email => {
-    // Print email
-    console.log(email);
+        div.innerHTML = `<p style="padding:8px; border:1px solid lightgray; margin:0px">
+                          <span style="float:left"><strong>${emails.sender}</strong></span>
+                          <span>${emails.subject}</span>
+                          <span style="float:right">${emails.timestamp}</span>
+                        </p>`;
+        div.addEventListener('click', function() {
+          console.log('This element has been clicked!')
+        });
+        document.querySelector('#emails-view').append(div);
+        
+      });
+    });
+  };
 
-    // ... do something else with email ...
-  });
-
-  }
-
+  // Load the sent tab
   if (mailbox === 'sent') {
     
-    fetch('/emails', {
-      method: 'POST',
-      body: JSON.stringify({
-          recipients: 'PONER EL MAIL',
-          subject: 'PONER EL ASUNTO',
-          body: 'PONER EL CUERPO'
-      })
-    })
+    fetch('/emails/sent')
     .then(response => response.json())
-    .then(result => {
-        // Print result
-        console.log(result);
+    .then(emails => {
+      // Print emails in console
+      console.log(emails);
+
+      // Show emails in the inbox
+      emails.forEach(emails => {
+        const div = document.createElement('div');
+
+        div.innerHTML = `<p style="padding:8px; border:1px solid lightgray; margin:0px">
+                          <span style="float:left"><strong>${emails.recipients}</strong></span>
+                          <span>${emails.subject}</span>
+                          <span style="float:right">${emails.timestamp}</span>
+                        </p>`;
+        div.addEventListener('click', function() {
+          console.log('This element has been clicked!')
+        });
+        document.querySelector('#emails-view').append(div);
+        
+      });
     });
+    event.preventDefault();
+  };
 
-  }
-
-  if (mailbox === 'archive') {
-
-    fetch(`/emails/${mail_id}`, {
-      method: 'PUT',
-      body: JSON.stringify({
-          archived: true
-      })
-    })
-  }
-
-}
+};
