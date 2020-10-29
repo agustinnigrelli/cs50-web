@@ -25,6 +25,7 @@ function compose_email() {
 
 // Submitting the form calls a function
 document.addEventListener('DOMContentLoaded', function() {
+
   document.querySelector('#compose-form').onsubmit = function() {
   
     const recipients = document.querySelector('#compose-recipients').value;
@@ -68,7 +69,7 @@ function load_mailbox(mailbox) {
       // Print emails in console
       console.log(emails);
 
-      // Show emails in the inbox
+      // Show emails
       emails.forEach(emails => {
 
         const div = document.createElement('div');
@@ -128,7 +129,22 @@ function load_mailbox(mailbox) {
             reply.innerHTML = 'Reply';
             archive.className = 'btn btn-sm btn-outline-secondary';
             archive.innerHTML = 'Archive';
-            
+
+            // Archive the viewed mail
+            archive.addEventListener('click', function() {
+              
+              fetch(`/emails/${emails.id}`, {
+                method: 'PUT',
+                body: JSON.stringify({
+                    archived: true
+                })
+              })
+              // Load inbox tab when the mail is archived
+              .then(() => {
+                load_mailbox('inbox')
+              })
+            });
+          
             headder.append(sender);
             headder.append(recipients);
             headder.append(subject);
@@ -149,9 +165,7 @@ function load_mailbox(mailbox) {
                 read: true
             })
           })
-          
         });
-        
       });
     });
   };
@@ -165,10 +179,10 @@ function load_mailbox(mailbox) {
       // Print emails in console
       console.log(emails);
 
-      // Show emails in the inbox
+      // Show emails
       emails.forEach(emails => {
-        const div = document.createElement('div');
 
+        const div = document.createElement('div');
         div.innerHTML = `<p style="padding:8px; border:1px solid lightgray; margin:0px">
                           <span style="float:left"><strong>${emails.recipients}</strong></span>
                           <span>${emails.subject}</span>
@@ -185,4 +199,100 @@ function load_mailbox(mailbox) {
     event.preventDefault();
   };
 
+  // Load the archive tab
+  if (mailbox === 'archive') {
+  
+    fetch('/emails/archive')
+    .then(response => response.json())
+    .then(emails => {
+      // Print emails in console
+      console.log(emails);
+
+      // Show emails
+      emails.forEach(emails => {
+
+        const div = document.createElement('div');
+        div.innerHTML = `<p style="padding:8px; border:1px solid lightgray; margin:0px">
+                          <span style="float:left"><strong>${emails.sender}</strong></span>
+                          <span>${emails.subject}</span>
+                          <span style="float:right">${emails.timestamp}</span>
+                        </p>`;
+
+        div.addEventListener('click', function() {
+
+          // Show the view of the archived email and hide the inbox
+          document.querySelector('#emails-view').style.display = 'none';
+          document.querySelector('#compose-view').style.display = 'none';
+          document.querySelector('#view-email').style.display = 'block';
+
+          document.querySelector('#view-email').innerHTML = '<h3>View archived email</h3>';
+
+          // Show the clicked email
+          fetch(`/emails/${emails.id}`)
+          .then(response => response.json())
+          .then(email => {
+            // Print email in console
+            console.log(email);
+            
+            // Create the HTML elements and append them to the view
+            const headder = document.createElement('ul');
+            const sender = document.createElement('li');
+            const recipients = document.createElement('li');
+            const subject = document.createElement('li');
+            const timestamp = document.createElement('li');
+            const reply = document.createElement('button');
+            const archive = document.createElement('button');
+            const separator = document.createElement('hr');
+            const body = document.createElement('p');
+            
+            headder.style.listStyleType = 'none';
+            headder.style.margin = 0;
+            headder.style.padding = 0;
+            
+            sender.innerHTML = `<strong>From: </strong>${emails.sender}`;
+            recipients.innerHTML = `<strong>To: </strong>${emails.recipients}`;
+            subject.innerHTML = `<strong>Subject: </strong>${emails.subject}`;
+            timestamp.innerHTML = `<strong>Date: </strong>${emails.timestamp}`;
+            body.innerHTML = `${emails.body}`
+            
+            reply.className = 'btn btn-sm btn-outline-primary';
+            reply.innerHTML = 'Reply';
+            archive.className = 'btn btn-sm btn-secondary';
+            archive.innerHTML = 'Archive';
+
+            // Archive the viewed mail
+            archive.addEventListener('click', function() {
+              
+              fetch(`/emails/${emails.id}`, {
+                method: 'PUT',
+                body: JSON.stringify({
+                    archived: false
+                })
+              })
+              // Load inbox tab when the mail is archived
+              .then(() => {
+                load_mailbox('inbox')
+              })
+            });
+          
+            headder.append(sender);
+            headder.append(recipients);
+            headder.append(subject);
+            headder.append(timestamp);
+            headder.append(reply, ' ');
+            headder.append(archive);
+            
+            document.querySelector('#view-email').append(headder);
+            document.querySelector('#view-email').append(separator);
+            document.querySelector('#view-email').append(body);
+
+          });
+
+        });
+        document.querySelector('#emails-view').append(div);
+        
+      });
+    });
+    event.preventDefault();
+  };
 };
