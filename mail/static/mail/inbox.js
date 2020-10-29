@@ -21,6 +21,26 @@ function compose_email() {
   document.querySelector('#compose-recipients').value = '';
   document.querySelector('#compose-subject').value = '';
   document.querySelector('#compose-body').value = '';
+  
+}
+
+function reply_email(recipient, response, body, date) {
+
+  // Show compose view and hide other views
+  document.querySelector('#emails-view').style.display = 'none';
+  document.querySelector('#compose-view').style.display = 'block';
+  document.querySelector('#view-email').style.display = 'none';
+
+  // Fill the forms with the arguments
+  document.querySelector('#compose-recipients').value = `${recipient}`;
+  if(response.slice(0,3) === 'Re:') {
+    document.querySelector('#compose-subject').value = `${response}`;
+  } else {
+    document.querySelector('#compose-subject').value = `Re: ${response}`;
+  }
+
+  document.querySelector('#compose-body').value = `\n\n________________\nIn response to:\nOn ${date}, ${recipient} wrote: ${body}`;
+
 }
 
 // Submitting the form calls a function
@@ -105,7 +125,7 @@ function load_mailbox(mailbox) {
             console.log(email);
             
             // Create the HTML elements and append them to the view
-            const headder = document.createElement('ul');
+            const header = document.createElement('ul');
             const sender = document.createElement('li');
             const recipients = document.createElement('li');
             const subject = document.createElement('li');
@@ -115,18 +135,26 @@ function load_mailbox(mailbox) {
             const separator = document.createElement('hr');
             const body = document.createElement('p');
             
-            headder.style.listStyleType = 'none';
-            headder.style.margin = 0;
-            headder.style.padding = 0;
+            header.style.listStyleType = 'none';
+            header.style.margin = 0;
+            header.style.padding = 0;
             
             sender.innerHTML = `<strong>From: </strong>${emails.sender}`;
             recipients.innerHTML = `<strong>To: </strong>${emails.recipients}`;
             subject.innerHTML = `<strong>Subject: </strong>${emails.subject}`;
             timestamp.innerHTML = `<strong>Date: </strong>${emails.timestamp}`;
-            body.innerHTML = `${emails.body}`
+            body.innerText = `${emails.body}`
             
             reply.className = 'btn btn-sm btn-outline-primary';
             reply.innerHTML = 'Reply';
+
+            // Reply
+            reply.addEventListener('click', function() {
+
+              reply_email(`${emails.sender}`, `${emails.subject}`, `${emails.body}`, `${emails.timestamp}`)
+
+            })
+
             archive.className = 'btn btn-sm btn-outline-secondary';
             archive.innerHTML = 'Archive';
 
@@ -145,14 +173,14 @@ function load_mailbox(mailbox) {
               })
             });
           
-            headder.append(sender);
-            headder.append(recipients);
-            headder.append(subject);
-            headder.append(timestamp);
-            headder.append(reply, ' ');
-            headder.append(archive);
+            header.append(sender);
+            header.append(recipients);
+            header.append(subject);
+            header.append(timestamp);
+            header.append(reply, ' ');
+            header.append(archive);
             
-            document.querySelector('#view-email').append(headder);
+            document.querySelector('#view-email').append(header);
             document.querySelector('#view-email').append(separator);
             document.querySelector('#view-email').append(body);
 
@@ -235,7 +263,7 @@ function load_mailbox(mailbox) {
             console.log(email);
             
             // Create the HTML elements and append them to the view
-            const headder = document.createElement('ul');
+            const header = document.createElement('ul');
             const sender = document.createElement('li');
             const recipients = document.createElement('li');
             const subject = document.createElement('li');
@@ -245,9 +273,9 @@ function load_mailbox(mailbox) {
             const separator = document.createElement('hr');
             const body = document.createElement('p');
             
-            headder.style.listStyleType = 'none';
-            headder.style.margin = 0;
-            headder.style.padding = 0;
+            header.style.listStyleType = 'none';
+            header.style.margin = 0;
+            header.style.padding = 0;
             
             sender.innerHTML = `<strong>From: </strong>${emails.sender}`;
             recipients.innerHTML = `<strong>To: </strong>${emails.recipients}`;
@@ -275,14 +303,14 @@ function load_mailbox(mailbox) {
               })
             });
           
-            headder.append(sender);
-            headder.append(recipients);
-            headder.append(subject);
-            headder.append(timestamp);
-            headder.append(reply, ' ');
-            headder.append(archive);
+            header.append(sender);
+            header.append(recipients);
+            header.append(subject);
+            header.append(timestamp);
+            header.append(reply, ' ');
+            header.append(archive);
             
-            document.querySelector('#view-email').append(headder);
+            document.querySelector('#view-email').append(header);
             document.querySelector('#view-email').append(separator);
             document.querySelector('#view-email').append(body);
 
