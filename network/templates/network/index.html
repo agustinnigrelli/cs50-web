@@ -26,23 +26,23 @@
                 <h3>{{post.user}}</h3>
             </div>
 
-            <div id="post-view">
+            <div class="post-view" id="post-view-{{post.id}}">
                 {% if user == post.user %}
-                    <a href="" id="edit">Edit</a>
+                    <a href="" id="edit" data-id="{{post.id}}">Edit</a>
                 {% endif %}
                 <p>{{post.body}}</p>
                 <p>{{post.timestamp}}</p>
                 <p><i class="fa fa-heart" style="color:red;"></i>{{post.likes}}</p>
                 <p>
                     {% if user.is_authenticated %}
-                    <span><a href="" id="comment">Comment</a></span><span> -</span>
+                    <span><a href="" id="comment" data-id="{{post.id}}">Comment</a></span><span> -</span>
                     {% endif %}
-                    <span><a href="" id="show-comments">Show comments</a></span>
+                    <span><a href="" id="show-comments" data-id="{{post.id}}">Show comments</a></span>
                 </p>
             </div>
 
             {% if user == post.user %}
-                <div id="post-edit">
+                <div class="post-edit" id="post-edit-{{post.id}}">
                     <form action="/edit" method="post">
                         <div class="form-group">
                             <p>Edit this post:</p>
@@ -55,11 +55,11 @@
                     </form>
                 </div>
             {% endif %}
-            <div id="post-comment">
+            <div class="post-comment" id="post-comment-{{post.id}}">
 
             </div>
 
-            <div id="comment-view">
+            <div class="comment-view" id="comment-view-{{post.id}}">
 
             </div>
         </div>
