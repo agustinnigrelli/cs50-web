@@ -1,24 +1,17 @@
 {% extends "network/layout.html" %}
-{% load static %}
 
 {% block body %}
-    <h1>All Posts</h1>
-    {% if user.is_authenticated %}
-        <div class="container-fluid p-3 my-3 border">
-            <div>
-                <h3>New Post</h2>
-            </div>
-            <form action="/post" method="post">
-                <div class="form-group">
-                    {% csrf_token %}
-                    <textarea class="form-control" name="postbody" id="postbody"></textarea>
-                </div>
-                <div class="form-group">
-                    <input type="submit" class="btn btn-primary" value="Post">
-                </div>
-            </form>
-        </div>
-    {% endif %}
+    <h1>{{user.username}}'s profile</h2>
+    <div class="container-fluid p-3 my-3"></div>
+        {% if not_following %}
+            <button class="btn btn-outline-primary" id="follow">Follow</button>
+        {% else %}
+            <button class="btn btn-primary" id="unfollow">Follow</button>
+        {% endif %}
+        <p>Following: {{}}</p>
+        <p>Followers: {{}}</p>
+    </div>
+    <h1>Posts</h1>
     {% for post in posts %}
         <div class="container-fluid p-3 my-3 border">
 

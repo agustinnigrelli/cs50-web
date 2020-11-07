@@ -74,3 +74,27 @@ def post(request):
         posts.save()
 
     return redirect("index")
+
+def edit(request):
+    if request.method == "POST":
+        post = Posts.objects.get(pk=request.POST["post_id"])
+        edited_body = request.POST.get("editbody")
+
+        post.body = edited_body
+        post.save()
+    
+    return redirect("index")
+
+def profile(request, user_id):
+    user = User.objects.get(pk=user_id)
+    posts = Posts.objects.filter(pk=user_id)
+    followlist = Followlist.objects.get(pk=request.user.id)
+    
+    if not user_id in followlist.following:
+        not_following = True
+
+    return render(request, "network/profile.html", {
+      "user": user,
+      "posts": posts,
+      "not_following": not_following
+    })
