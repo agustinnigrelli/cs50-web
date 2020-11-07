@@ -1,28 +1,40 @@
 document.addEventListener('DOMContentLoaded', function() {
 
+    let i;
     // Toggle between the views
-    document.querySelector('#edit').addEventListener('click', () => post_edit(event.target.dataset.id))
-    document.querySelector('#comment').addEventListener('click', () => post_comment(event.target.dataset.id))
-    document.querySelector('#show-comments').addEventListener('click', () => show_comments(event.target.dataset.id))
+    let edit = document.querySelectorAll('.edit');
+    for(i = 0; i < edit.length; i++) {
+        edit[i].addEventListener('click', () => post_edit(event.target.dataset.id))
+    }
+
+    let comment = document.querySelectorAll('.comment');
+    for(i = 0; i < comment.length; i++) {
+        comment[i].addEventListener('click', () => post_comment(event.target.dataset.id))
+    }
+
+    let showcomments = document.querySelectorAll('.showcomments');
+    for(i = 0; i < showcomments.length; i++) {
+        showcomments[i].addEventListener('click', () => show_comments(event.target.dataset.id))
+    }
+
 
     // By default show the post_view of all elements (Selected by class)
-    var i;
-    var postedit = document.querySelectorAll('div.post-edit');
+    let postedit = document.querySelectorAll('div.post-edit');
     for(i = 0; i < postedit.length; i++) {
         postedit[i].style.display = 'none';
     }
 
-    var postcomment = document.querySelectorAll('div.post-comment');
+    let postcomment = document.querySelectorAll('div.post-comment');
     for(i = 0; i < postedit.length; i++) {
         postcomment[i].style.display = 'none';
     }
 
-    var commentview = document.querySelectorAll('div.comment-view');
+    let commentview = document.querySelectorAll('div.comment-view');
     for(i = 0; i < postedit.length; i++) {
         commentview[i].style.display = 'none';
     }
     
-    var postview = document.querySelectorAll('div.post-view');
+    let postview = document.querySelectorAll('div.post-view');
     for(i = 0; i < postedit.length; i++) {
         postview[i].style.display = 'block';
     }

@@ -86,15 +86,16 @@ def edit(request):
     return redirect("index")
 
 def profile(request, user_id):
-    user = User.objects.get(pk=user_id)
-    posts = Posts.objects.filter(pk=user_id)
-    followlist = Followlist.objects.get(pk=request.user.id)
     
-    if not user_id in followlist.following:
+    followlist = Followlist.objects.filter(user=user_id)
+
+    if not request.user in followlist:
         not_following = True
 
     return render(request, "network/profile.html", {
-      "user": user,
-      "posts": posts,
+      "profile": User.objects.get(pk=user_id),
+      "posts": Posts.objects.filter(user=user_id).order_by('-timestamp'),
+      "followed_by": '10',
+      "following": '20',
       "not_following": not_following
     })
