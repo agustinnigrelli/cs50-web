@@ -17,8 +17,13 @@ document.addEventListener('DOMContentLoaded', function() {
         showcomments[i].addEventListener('click', () => show_comments(event.target.dataset.id))
     }
 
-
     // By default show the post_view of all elements (Selected by class)
+    reset_views();
+
+});
+
+function reset_views() {
+
     let postedit = document.querySelectorAll('div.post-edit');
     for(i = 0; i < postedit.length; i++) {
         postedit[i].style.display = 'none';
@@ -38,11 +43,15 @@ document.addEventListener('DOMContentLoaded', function() {
     for(i = 0; i < postedit.length; i++) {
         postview[i].style.display = 'block';
     }
-});
+
+}
 
 function post_edit(id) {
 
     event.preventDefault();
+
+    // Hide all previous visible divs of post-edit
+    reset_views();
 
     // Show the edit textarea and hyde the post_view
     document.querySelector(`#post-edit-${id}`).style.display = 'block';

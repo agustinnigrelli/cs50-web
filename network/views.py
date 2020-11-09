@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
 
-from .models import User, Followlist, Posts, Comments
+from .models import User, Followlist, Likelist , Posts, Comments
 
 
 def index(request):
@@ -86,16 +86,40 @@ def edit(request):
     return redirect("index")
 
 def profile(request, user_id):
-    
-    followlist = Followlist.objects.filter(user=user_id)
 
-    if not request.user in followlist:
-        not_following = True
+    followers_count = Followlist.objects.filter(following=user_id).count()
+    following_count = Followlist.objects.filter(user=user_id).count
+
+    # By default assume the target is not being followed
+    not_following = "False"
+    
+    if not Followlist.objects.filter(user=request.user.id, following=user_id):
+        not_following = "True"
 
     return render(request, "network/profile.html", {
       "profile": User.objects.get(pk=user_id),
       "posts": Posts.objects.filter(user=user_id).order_by('-timestamp'),
-      "followed_by": '10',
-      "following": '20',
+      "followers": followers_count,
+      "following": following_count,
       "not_following": not_following
     })
+
+def follow(request): 
+
+    follow = request.POST.get("follow")
+    unfollow = request.POST.get("unfollow")
+
+    if request.method == "POST":
+        if follow:
+    
+            user = User.objects.get(pk=request.user.id)
+            following = User.objects.get(pk=request.POST["target"])
+
+            followlist =  Followlist(user=user, following=following)
+            followlist.save()
+        
+        if unfollow: 
+
+            Followlist.objects.get(user=request.user.id, following=request.POST["target"]).delete()
+
+    return redirect("profile", user_id=request.POST["target"])

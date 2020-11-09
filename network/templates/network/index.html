@@ -32,7 +32,7 @@
                 {% endif %}
                 <p>{{post.body}}</p>
                 <p>{{post.timestamp}}</p>
-                <p><i class="fa fa-heart" style="color:red;"></i>{{post.likes}}</p>
+                <p><i class="fa fa-heart" id="like" style="color:red;"></i>{{ likes }}</p>
                 <p>
                     {% if user.is_authenticated %}
                     <span><a href="" class="comment" data-id="{{ post.id }}">Comment</a></span><span> -</span>

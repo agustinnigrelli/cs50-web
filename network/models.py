@@ -12,11 +12,17 @@ class Followlist(models.Model):
     def __str__(self):
         return f"{self.user} is following: {self.following}"
 
+class Likelist(models.Model):
+    user = models.ForeignKey('User', on_delete=models.CASCADE, related_name='liker')
+    likes = models.ForeignKey('Posts', on_delete=models.CASCADE, related_name='likes')
+
+    def __str__(self):
+        return f"{self.user} likes {self.likes}"
+
 class Posts(models.Model):
     user = models.ForeignKey('User', on_delete=models.CASCADE)
     body = models.TextField(blank=False, max_length=300)
     timestamp = models.DateTimeField(auto_now_add=True)
-    likes = models.IntegerField(default=0)
 
     def __str__(self):
         return f"{self.user} posted {self.body} at {self.timestamp}"
