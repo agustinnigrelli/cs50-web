@@ -30,9 +30,9 @@
                 {% if user == post.user %}
                     <a href="" class="edit" data-id="{{ post.id }}">Edit</a>
                 {% endif %}
-                <p>{{post.body}}</p>
+                <p id="body-{{ post.id }}">{{post.body}}</p>
                 <p>{{post.timestamp}}</p>
-                <p><i class="fa fa-heart" id="like" style="color:red;"></i>{{ likes }}</p>
+                <p><i class="fa fa-heart-o" id="like" style="color:red;"></i><strong> {{ likes }} Likes</strong></p>
                 <p>
                     {% if user.is_authenticated %}
                     <span><a href="" class="comment" data-id="{{ post.id }}">Comment</a></span><span> -</span>
@@ -41,28 +41,15 @@
                 </p>
             </div>
 
-            {% if user == post.user %}
-                <div class="post-edit" id="post-edit-{{ post.id }}">
-                    <form action="/edit" method="post">
-                        <div class="form-group">
-                            <p>Edit this post:</p>
-                            {% csrf_token %}
-                            <input type="hidden" name="post_id" id="post_id" value="{{ post.id }}">
-                            <textarea class="form-control" name="editbody" id="editbody">{{ post.body }}</textarea>
-                        </div>
-                        <div class="form-group">
-                            <input type="submit" class="btn btn-primary" id="save" value="Save">
-                        </div>
-                    </form>
-                </div>
-            {% endif %}
-            <div class="post-comment" id="post-comment-{{ post.id }}">
+            <div class="post-edit" id="post-edit-{{ post.id }}">                 
+            </div>
 
+            <div class="post-comment" id="post-comment-{{ post.id }}">
             </div>
 
             <div class="comment-view" id="comment-view-{{ post.id }}">
-
             </div>
+
         </div>
     {% endfor %}
 {% endblock %}

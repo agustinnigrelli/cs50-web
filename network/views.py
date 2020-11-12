@@ -1,8 +1,10 @@
+import json
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
+
 
 from .models import User, Followlist, Likelist , Posts, Comments
 
@@ -65,8 +67,11 @@ def register(request):
     else:
         return render(request, "network/register.html")
 
+
 def post(request):
+
     if request.method == "POST":
+
         user = User.objects.get(pk=request.user.id)
         body = request.POST.get("postbody")
 
@@ -75,20 +80,25 @@ def post(request):
 
     return redirect("index")
 
-def edit(request):
-    if request.method == "POST":
-        post = Posts.objects.get(pk=request.POST["post_id"])
-        edited_body = request.POST.get("editbody")
 
-        post.body = edited_body
+def edit(request):
+
+    if request.method == "PUT":
+
+        data = json.loads(request.body)
+
+        post = Posts.objects.get(pk=data["post_id"])
+        
+        post.body = data["editbody"]
         post.save()
     
-    return redirect("index")
+        return JsonResponse({"message": "Post edited succesfully"}, safe=False)    
+
 
 def profile(request, user_id):
 
     followers_count = Followlist.objects.filter(following=user_id).count()
-    following_count = Followlist.objects.filter(user=user_id).count
+    following_count = Followlist.objects.filter(user=user_id).count()
 
     # By default assume the target is not being followed
     not_following = "False"
@@ -103,6 +113,7 @@ def profile(request, user_id):
       "following": following_count,
       "not_following": not_following
     })
+
 
 def follow(request): 
 
@@ -123,3 +134,15 @@ def follow(request):
             Followlist.objects.get(user=request.user.id, following=request.POST["target"]).delete()
 
     return redirect("profile", user_id=request.POST["target"])
+
+
+def like(request):
+    
+    """????"""
+    
+    data = json.loads(reques.body)
+
+    likes_count = Likes.objects.filter(likes=data["post_id"]).count()
+
+
+    return JsonResponse({"likes": likes_count}, safe=False)

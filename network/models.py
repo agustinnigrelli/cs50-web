@@ -27,6 +27,13 @@ class Posts(models.Model):
     def __str__(self):
         return f"{self.user} posted {self.body} at {self.timestamp}"
 
+    def serialize(self):
+        return {
+            "user": self.user,
+            "body": self.body,
+            "timestamp": self.timestamp
+        }
+
 class Comments(models.Model):
     user = models.ForeignKey('User', on_delete=models.CASCADE)
     post = models.ForeignKey('Posts', on_delete=models.CASCADE)
