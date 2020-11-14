@@ -5,14 +5,15 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
 
-
 from .models import User, Followlist, Likelist , Posts, Comments
+from django.db.models import Exists, OuterRef
 
 
 def index(request):
 
     return render(request, "network/index.html", {
-        "posts": Posts.objects.all().order_by('-timestamp')
+        "posts": Posts.objects.all().order_by('-timestamp'),
+        "likelist": Likelist.objects.filter(pk=request.user.id),
     })
 
 
@@ -99,6 +100,10 @@ def profile(request, user_id):
 
     followers_count = Followlist.objects.filter(following=user_id).count()
     following_count = Followlist.objects.filter(user=user_id).count()
+    
+    posts = Posts.objects.filter(user=user_id).annotate(
+        is_liked=Exists(Likelist.objects.filter(likes=OuterRef('pk'), user=user_id))
+        ).order_by('-timestamp')
 
     # By default assume the target is not being followed
     not_following = "False"
@@ -108,7 +113,7 @@ def profile(request, user_id):
 
     return render(request, "network/profile.html", {
       "profile": User.objects.get(pk=user_id),
-      "posts": Posts.objects.filter(user=user_id).order_by('-timestamp'),
+      "posts": posts,
       "followers": followers_count,
       "following": following_count,
       "not_following": not_following
@@ -117,32 +122,48 @@ def profile(request, user_id):
 
 def follow(request): 
 
+    user = User.objects.get(pk=request.user.id)
     follow = request.POST.get("follow")
     unfollow = request.POST.get("unfollow")
 
     if request.method == "POST":
+        
         if follow:
     
-            user = User.objects.get(pk=request.user.id)
             following = User.objects.get(pk=request.POST["target"])
-
             followlist =  Followlist(user=user, following=following)
             followlist.save()
         
         if unfollow: 
 
-            Followlist.objects.get(user=request.user.id, following=request.POST["target"]).delete()
+            Followlist.objects.get(user=user, following=request.POST["target"]).delete()
 
     return redirect("profile", user_id=request.POST["target"])
 
 
 def like(request):
     
-    """????"""
-    
-    data = json.loads(reques.body)
+    if request.method == "POST":
 
-    likes_count = Likes.objects.filter(likes=data["post_id"]).count()
+        data = json.loads(request.body)
+        user = User.objects.get(pk=request.user.id)
+        post = Posts.objects.get(pk=data["post_id"])
 
+        # If the post is not in user's likelist. Create a row and add 1 to the count
+        if not Likelist.objects.filter(user=user, likes=post):
+            
+            # PROBAR PASAR EL METODO A MANY TO MANY. O VER COMO LOGRAR QUE HAGA LA COMPARACION EN HTML
+            likelist = Likelist(user=user, likes=post)
+            likelist.save()
+            post.likecount += 1
+            post.save()
+        
+        # If it's already there. Delete the row and substract 1 to the count
+        else:
 
+            Likelist.objects.get(user=user, likes=post).delete()
+            post.likecount -= 1
+            post.save()
+
+    likes_count = Likelist.objects.filter(likes=data["post_id"]).count()
     return JsonResponse({"likes": likes_count}, safe=False)

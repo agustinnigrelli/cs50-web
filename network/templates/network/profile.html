@@ -27,6 +27,7 @@
     </div>
     <h1>Posts</h1>
     {% for post in posts %}
+    
         <div class="container-fluid p-3 my-3 border">
 
             <div>
@@ -39,11 +40,16 @@
                 {% endif %}
                 <p id="body-{{ post.id }}">{{ post.body }}</p>
                 <p>{{ post.timestamp }}</p>
-                {% if not_liking == "True" %}
-                    <p><i class="fa fa-heart-o" id="like-{{ post.id }}" style="color:red;"></i><strong> {{ likes }} Likes</strong></p>
-                {% else %}
-                    <p><i class="fa fa-heart" id="like-{{ post.id }}" style="color:red;"></i><strong> {{ likes }} Likes</strong></p>
-                {% endif %}
+                <p>
+                    {% if post.is_liked %}
+                        <i class="fa fa-heart like" data-id="{{ post.id }}" id="like-{{ post.id }}" style="color:red;"></i>
+                        <input type="hidden" id="like-status-{{ post.id }}" value="true">
+                    {% else %}
+                        <i class="fa fa-heart-o like" data-id="{{ post.id }}" id="like-{{ post.id }}" style="color:red;"></i>
+                        <input type="hidden" id="like-status-{{ post.id }}" value="false">
+                    {% endif %} 
+                    <strong id="count-{{ post.id }}">{{ post.likecount }}</strong> Likes
+                </p>
                 <p>
                     {% if user.is_authenticated %}
                     <span><a href="" class="comment" data-id="{{ post.id }}">Comment</a></span><span> -</span>

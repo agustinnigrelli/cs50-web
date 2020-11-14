@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
 
     
-    // Toggle between the views
+    // Perfom specific functions
     document.querySelectorAll('.edit').forEach( function (button) {
         button.addEventListener('click', () => post_edit(event.target.dataset.id))
     })
@@ -12,6 +12,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     document.querySelectorAll('.showcomments').forEach( function (button) {
         button.addEventListener('click', () => post_edit(event.target.dataset.id))
+    })
+
+    document.querySelectorAll('.like').forEach( function (button) {
+        button.addEventListener('click', () => like(event.target.dataset.id))
     })
 
     // By default show the post_view of all elements (Selected by class)
@@ -130,8 +134,55 @@ function post_edit(id) {
             document.querySelector(`#body-${id}`).innerHTML = editbody;
         })
         // Hide edit view and show post view
-        reset_views()
+        div1.remove();
+        div2.remove();
+        label.remove();
+        textarea.remove();
+        save.remove();
+        reset_views();
     })
+}
+
+function like(id) {
+
+    // Inicialize counter with the current count
+    const post_id = id;
+    let counter = document.querySelector(`#count-${id}`).innerHTML;
+    let like = document.querySelector(`#like-status-${id}`).value;
+
+    if (like === "false") {
+        counter++;
+        like = "true";
+        document.querySelector(`#like-${id}`).className = 'fa fa-heart like'
+    } else {
+        counter--;
+        like = "false";
+        document.querySelector(`#like-${id}`).className = 'fa fa-heart-o like'
+    }
+
+    document.querySelector(`#like-status-${id}`).value = like;
+    document.querySelector(`#count-${id}`).innerHTML = counter;
+
+    fetch('/like', {
+        credentials: 'include',
+            method: 'POST',
+            mode: 'same-origin',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken') 
+            },
+            body: JSON.stringify({
+                like: like,
+                post_id: post_id
+            })
+        })
+        .then(response => response.text())
+        .then(result => {
+            // Print result
+            console.log(result);
+    })
+        
 }
 
 function post_comment(id) {
@@ -142,6 +193,8 @@ function post_comment(id) {
     document.querySelector(`#post-edit-${id}`).style.display = 'none';
     document.querySelector(`#post-comment-${id}`).style.display = 'block';
     document.querySelector(`#post-view-${id}`).style.display = 'block';
+
+    // Function pending...
 }
 
 function show_comments(id) {

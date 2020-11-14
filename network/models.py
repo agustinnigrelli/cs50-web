@@ -23,6 +23,7 @@ class Posts(models.Model):
     user = models.ForeignKey('User', on_delete=models.CASCADE)
     body = models.TextField(blank=False, max_length=300)
     timestamp = models.DateTimeField(auto_now_add=True)
+    likecount = models.IntegerField(default=0)
 
     def __str__(self):
         return f"{self.user} posted {self.body} at {self.timestamp}"
