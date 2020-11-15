@@ -11,9 +11,15 @@ from django.db.models import Exists, OuterRef
 
 def index(request):
 
+    if request.user.id:
+        posts = Posts.objects.all().annotate(
+            is_liked=Exists(Likelist.objects.filter(likes=OuterRef('pk'), user=request.user))
+            ).order_by('-timestamp')
+    else:
+        posts = Posts.objects.all().order_by('-timestamp')
+
     return render(request, "network/index.html", {
-        "posts": Posts.objects.all().order_by('-timestamp'),
-        "likelist": Likelist.objects.filter(pk=request.user.id),
+        "posts": posts
     })
 
 
@@ -101,9 +107,13 @@ def profile(request, user_id):
     followers_count = Followlist.objects.filter(following=user_id).count()
     following_count = Followlist.objects.filter(user=user_id).count()
     
-    posts = Posts.objects.filter(user=user_id).annotate(
-        is_liked=Exists(Likelist.objects.filter(likes=OuterRef('pk'), user=user_id))
-        ).order_by('-timestamp')
+    if request.user.id:
+        posts = Posts.objects.filter(user=user_id).annotate(
+            is_liked=Exists(Likelist.objects.filter(likes=OuterRef('pk'), user=request.user))
+            ).order_by('-timestamp')
+        
+    else:
+        posts = Posts.objects.filter(user=user_id).order_by('-timestamp')
 
     # By default assume the target is not being followed
     not_following = "False"

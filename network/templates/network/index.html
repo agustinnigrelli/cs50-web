@@ -33,14 +33,16 @@
                 <p id="body-{{ post.id }}">{{post.body}}</p>
                 <p>{{post.timestamp}}</p>
                 <p>
-                    {% if likelist.likes != post %}
-                        <i class="fa fa-heart-o like" data-id="{{ post.id }}" id="like-{{ post.id }}" style="color:red;"></i>
-                        <input type="hidden" id="like-status-{{ post.id }}" value="false">
-                    {% else %}    
-                        <i class="fa fa-heart like" data-id="{{ post.id }}" id="like-{{ post.id }}" style="color:red;"></i>
-                        <input type="hidden" id="like-status-{{ post.id }}" value="true">
+                    {% if user.is_authenticated %}
+                        {% if post.is_liked %}
+                            <i class="fa fa-heart like" data-id="{{ post.id }}" id="like-{{ post.id }}" style="color:red;"></i>
+                            <input type="hidden" id="like-status-{{ post.id }}" value="true">
+                        {% else %}
+                            <i class="fa fa-heart-o like" data-id="{{ post.id }}" id="like-{{ post.id }}" style="color:red;"></i>
+                            <input type="hidden" id="like-status-{{ post.id }}" value="false">
+                        {% endif %} 
                     {% endif %}
-                     <strong id="count-{{ post.id }}">{{ post.likecount }}</strong> Likes
+                    <strong id="count-{{ post.id }}">{{ post.likecount }}</strong> Likes
                 </p>
                 <p>
                     {% if user.is_authenticated %}

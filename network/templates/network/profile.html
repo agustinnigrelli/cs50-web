@@ -5,21 +5,23 @@
 
     <h1>{{ profile.username }}'s profile</h2>
     <div class="container-fluid p-3 my-3">
-        {% if user.username != profile.username %}
-            {% if not_following == "True" %}
-                <form action="/follow" method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="follow" value="follow">
-                    <input type="hidden" name="target" value="{{ profile.id }}">
-                    <input type="submit" class="btn btn-outline-primary" value="Follow">
-                </form>
-            {% else %}
-                <form action="/follow" method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="unfollow" value="unfollow">
-                    <input type="hidden" name="target" value="{{ profile.id }}">
-                    <input type="submit" class="btn btn-primary" value="Unfollow">
-                </form>
+        {% if user.is_authenticated %}
+            {% if user.username != profile.username %}
+                {% if not_following == "True" %}
+                    <form action="/follow" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="follow" value="follow">
+                        <input type="hidden" name="target" value="{{ profile.id }}">
+                        <input type="submit" class="btn btn-outline-primary" value="Follow">
+                    </form>
+                {% else %}
+                    <form action="/follow" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="unfollow" value="unfollow">
+                        <input type="hidden" name="target" value="{{ profile.id }}">
+                        <input type="submit" class="btn btn-primary" value="Unfollow">
+                    </form>
+                {% endif %}
             {% endif %}
         {% endif %}
         <p>Following: {{ following }}</p>
@@ -41,13 +43,15 @@
                 <p id="body-{{ post.id }}">{{ post.body }}</p>
                 <p>{{ post.timestamp }}</p>
                 <p>
-                    {% if post.is_liked %}
-                        <i class="fa fa-heart like" data-id="{{ post.id }}" id="like-{{ post.id }}" style="color:red;"></i>
-                        <input type="hidden" id="like-status-{{ post.id }}" value="true">
-                    {% else %}
-                        <i class="fa fa-heart-o like" data-id="{{ post.id }}" id="like-{{ post.id }}" style="color:red;"></i>
-                        <input type="hidden" id="like-status-{{ post.id }}" value="false">
-                    {% endif %} 
+                    {% if user.is_authenticated %}
+                        {% if post.is_liked %}
+                            <i class="fa fa-heart like" data-id="{{ post.id }}" id="like-{{ post.id }}" style="color:red;"></i>
+                            <input type="hidden" id="like-status-{{ post.id }}" value="true">
+                        {% else %}
+                            <i class="fa fa-heart-o like" data-id="{{ post.id }}" id="like-{{ post.id }}" style="color:red;"></i>
+                            <input type="hidden" id="like-status-{{ post.id }}" value="false">
+                        {% endif %} 
+                    {% endif %}
                     <strong id="count-{{ post.id }}">{{ post.likecount }}</strong> Likes
                 </p>
                 <p>
