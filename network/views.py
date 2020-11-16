@@ -1,5 +1,6 @@
 import json
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect
@@ -150,6 +151,19 @@ def follow(request):
 
     return redirect("profile", user_id=request.POST["target"])
 
+
+@login_required
+def following(request):
+    
+    # http://thecodelearners.com/django-quersets-one-to-one-foreign-key-inner-joins-query-filtering/
+
+    posts = Posts.objects.filter().annotate(
+        is_liked=Exists(Likelist.objects.filter(likes=OuterRef('pk'), user=request.user))
+    ).order_by('-timestamp')
+
+    return render(request, "network/following.html", {
+        "posts": posts
+    }) 
 
 def like(request):
     
