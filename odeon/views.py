@@ -7,11 +7,12 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 import datetime
 
+from .models import User, Subject
+
 @login_required
 def index(request):
-    return render(request, "odeon/index.html", {
-        "announcements": Announcement.objects.all()
-    })
+    
+    return render(request, "odeon/index.html")
 
 
 def login_view(request):

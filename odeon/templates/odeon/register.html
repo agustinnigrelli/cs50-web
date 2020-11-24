@@ -8,8 +8,8 @@
 
     <center><h2>Tutors and students in touch!</h2></center>
     <br>
-    <div style="display:flex">
-        <div class="form-box" style="float:left;">
+    <div>
+        <div>
             {% if message %}
                 <div>{{ message }}</div>
             {% endif %}
@@ -31,9 +31,6 @@
             </form>
             <br>
             <small>Already have an account? <a href="{% url 'login' %}">Log In here.</a></small>
-            </div>
-            <div class="form-box" style="float:right;">
-                <img src="{% static 'odeon/sketch1.png' %}" style="max-width:500px; max-height:500px;">
             </div>
         </div>
     </div>

@@ -8,10 +8,10 @@
 
     <center><h2>Tutors and students in touch!</h2></center>
     <br>
-    <div style="display:flex">
-        <div class="form-box" style="float:left;">
+    <div>
+        <div>
             {% if message %}
-                <div style="text-align:left;">{{ message }}</div>
+                <div style="text-align:center;">{{ message }}</div>
             {% endif %}       
             <form action="{% url 'login' %}" method="post">
                 {% csrf_token %}
@@ -25,9 +25,6 @@
             </form>
             <br>
             <small>Don't have an account? <a href="{% url 'register' %}">Register here.</a></small>
-        </div>
-        <div class="form-box" style="float:right;">
-            <img src="{% static 'odeon/sketch1.png' %}" style="max-width:500px; max-height:500px;">
         </div>
     </div>
     
