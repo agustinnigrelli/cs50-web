@@ -16,7 +16,7 @@ class Announcement(models.Model):
     subject_id = models.ForeignKey(Subject, related_name="subject_id", on_delete=models.CASCADE)
     title = models.CharField(max_length=50)
     description =  models.CharField(max_length=300)
-    price = models.FloatField(max_length=50)
+    price = models.FloatField(max_length=50, null=True)
     email = models.CharField(max_length=50, null=True)
     phone = models.CharField(max_length=50, null=True)
     activity = models.CharField(max_length=10, default="Open")

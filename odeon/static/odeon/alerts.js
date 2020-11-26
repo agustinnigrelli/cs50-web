@@ -97,8 +97,9 @@ function validate_student() {
   var subject = document.forms["student"]["subject"].value;
   var topic = document.forms["student"]["topic"].value;
   var textstudent = document.forms["student"]["textstudent"].value;
-  var contact = document.forms["student"]["contact"].value;
-  if(subject == "" || topic == "" || textstudent == "" || contact == ""){
+  var contact1 = document.forms["tutor"]["contact1"].value;
+  var contact2 = document.forms["tutor"]["contact2"].value;
+  if(subject == "" || topic == "" || textstudent == "" || contact1 == "" || contact2 == ""){
     swal({
       title: "Complete everything!",
       text: "Every field is important. Please don't leavy any blank field"
