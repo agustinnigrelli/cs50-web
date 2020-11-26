@@ -78,15 +78,16 @@ function validate_register() {
 }
 
 function validate_tutor() {
+  var subject = document.forms["tutor"]["subject"].value;
   var title = document.forms["tutor"]["title"].value;
   var texttutor = document.forms["tutor"]["texttutor"].value;
   var price = document.forms["tutor"]["price"].value;
   var contact1 = document.forms["tutor"]["contact1"].value;
   var contact2 = document.forms["tutor"]["contact2"].value;
-  if(title == "" || texttutor == "" || price == "" || contact1 == "" || contact2 == ""){
+  if(subject=="empty" || title == "" || texttutor == "" || price == "" || contact1 == "" || contact2 == ""){
     swal({
       title: "Complete everything!",
-      text: "Every field is important. Please don't leavy any blank field"
+      text: "Every field is important. Please don't leave any blank field"
     });
     return false;
   }

@@ -13,11 +13,13 @@ class Subject(models.Model):
 
 class Announcement(models.Model):
     user = models.ForeignKey(User, related_name="creator", on_delete=models.CASCADE)
-    category_id = models.ForeignKey(Subject, related_name="category_id", on_delete=models.CASCADE)
+    subject_id = models.ForeignKey(Subject, related_name="subject_id", on_delete=models.CASCADE)
     title = models.CharField(max_length=50)
     description =  models.CharField(max_length=300)
     price = models.FloatField(max_length=50)
-    activity = models.CharField(max_length=10)
+    email = models.CharField(max_length=50, null=True)
+    phone = models.CharField(max_length=50, null=True)
+    activity = models.CharField(max_length=10, default="Open")
     listing_time = models.DateField()
 
     def __str__(self):

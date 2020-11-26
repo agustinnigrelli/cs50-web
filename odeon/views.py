@@ -65,3 +65,11 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "odeon/register.html")
+
+def publish(request):
+    
+    return render(request, "odeon/publish.html", {
+        "user": User.objects.get(pk=request.user.id),
+        "subjects": Subject.objects.all()
+
+    })

@@ -1,0 +1,79 @@
+{% extends "odeon/layout.html" %}
+
+{% load static %}
+
+{% block title %}
+    Publish
+{% endblock %}
+
+{% block body %}
+    <script src="{% static 'odeon/alerts.js' %}"></script>
+    <script src="{% static 'odeon/select.js' %}"></script>
+
+    <label for="select">Make an announcement as:</label>
+    <select class="form-control form-control" id="select" name="select">
+        <option value="empty">Choose one</option>
+        <option value="tutor">Tutor</option>
+        <option value="student">Student</option>
+    </select>
+    <br>
+    <br>
+    <div id="tutor">
+        <form name="tutor" class="acc-form" action="/publish" method="post" onsubmit="return validate_tutor()" required>
+            <input type="hidden" name="selected" value="tutor">
+            <div>
+                <label for="select">Wich subject can you teach?:</label>
+                <select class="form-control form-control" name="subject">
+                    <option value="empty">Subject</option>
+                    {% for subject in subjects %}
+                        <option value="{{ subject.subject }}">{{ subject.subject }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <label for="text">Title / Sub-subject:</label>
+            <input type="text" class="form-control" autocomplete="off" name="title" id="title" placeholder="Example: Calculus Online">
+            <textarea class="form-control" autocomplete="off" style="height:200px; width:410px" maxlength=250 name="texttutor" id="texttutor" placeholder="Brief description"></textarea>
+            <small>Max. 300 caracteres</small>
+            <br>
+            <br>
+            <label for="text">Price: $</label>
+            <input type="number" step=".01" class="form-control" autocomplete="off" name="price" id="price" placeholder="Value per hour">
+            <br>
+            <br>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="number">Contact 1:</label>
+                    <input type="text" class="form-control" autocomplete="off" name="contact1" id="contact1" placeholder="Phone number">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="text">Contact 2:</label>
+                    <input type="text" class="form-control" autocomplete="off" name="contact2" id="contact2" placeholder="e-mail"  value="{{ user.email }}">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-dark">Publicar</button>
+        </form>
+    </div>
+    <div id="student">
+        <form name="student" class="acc-form" action="/publish" method="post" onsubmit="return validate_student()" required>
+            <input type="hidden" name="selected" value="student">
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <input type="text" class="form-control" autocomplete="off" name="subject" id="subject" placeholder="Materia">
+                </div>
+                <div class="form-group col-md-6">
+                    <input type="text" class="form-control" autocomplete="off" name="topic" id="topic" placeholder="Temas">
+                </div>
+            </div>
+            <textarea class="form-control" autocomplete="off" style="height:200px; width:410px" maxlength=250 name="textstudent" id="textstudent" placeholder="Breve descripcion"></textarea>
+            <small>Max. 300 caracteres</small>
+            <br>
+            <br>
+            <label for="text">Contacto:</label>
+            <input type="text" class="form-control" autocomplete="off" name="contact" id="contact" placeholder="Telefono o e-mail">
+            <br>
+            <br>
+            <button type="submit" class="btn btn-dark">Publicar</button>
+        </form>
+    </div>
+
+{% endblock %}
