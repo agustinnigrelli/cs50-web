@@ -7,7 +7,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 import datetime
 
-from .models import User, Subject
+from .models import User, Subject, Announcement, Bookmark
 
 @login_required
 def index(request):
@@ -68,8 +68,24 @@ def register(request):
 
 def publish(request):
     
+    if request.method == "POST":
+        user = User.objects.get(pk=request.user.id)
+        subject_id = Subject.objects.get(subject=request.POST["subject"])
+        role = request.POST.get("role")
+        title = request.POST.get("title")
+        body = request.POST.get("body")
+        email = request.POST.get("email")
+        phone = request.POST.get("phone")
+
+        if role == "tutor":
+            price = request.POST.get("price")
+        else:
+            price = None
+        
+        announcement = Announcement(user=user, subject_id=subject_id, role=role, title=title, body=body, price=price, email=email, phone=phone)
+        announcement.save()
+
     return render(request, "odeon/publish.html", {
-        "user": User.objects.get(pk=request.user.id),
         "subjects": Subject.objects.all()
 
     })

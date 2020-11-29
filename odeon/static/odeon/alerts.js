@@ -65,7 +65,7 @@ function validate_register() {
   } else if (regemail ==""){
       swal({
           title: "Ups!",
-          text: "You mus provide an e-mail"
+          text: "You must provide an e-mail"
           });
       return false;
   } else if (regpassword == "" || regpasswordcon == ""){
@@ -80,11 +80,11 @@ function validate_register() {
 function validate_tutor() {
   var subject = document.forms["tutor"]["subject"].value;
   var title = document.forms["tutor"]["title"].value;
-  var texttutor = document.forms["tutor"]["texttutor"].value;
+  var body = document.forms["tutor"]["body"].value;
   var price = document.forms["tutor"]["price"].value;
-  var contact1 = document.forms["tutor"]["contact1"].value;
-  var contact2 = document.forms["tutor"]["contact2"].value;
-  if(subject=="empty" || title == "" || texttutor == "" || price == "" || contact1 == "" || contact2 == ""){
+  var phone = document.forms["tutor"]["phone"].value;
+  var email = document.forms["tutor"]["email"].value;
+  if(subject=="empty" || title == "" || body == "" || price == "" || phone == "" || email == ""){
     swal({
       title: "Complete everything!",
       text: "Every field is important. Please don't leave any blank field"
@@ -95,11 +95,11 @@ function validate_tutor() {
 
 function validate_student() {
   var subject = document.forms["student"]["subject"].value;
-  var topic = document.forms["student"]["topic"].value;
-  var textstudent = document.forms["student"]["textstudent"].value;
-  var contact1 = document.forms["tutor"]["contact1"].value;
-  var contact2 = document.forms["tutor"]["contact2"].value;
-  if(subject == "" || topic == "" || textstudent == "" || contact1 == "" || contact2 == ""){
+  var title = document.forms["student"]["title"].value;
+  var body = document.forms["student"]["body"].value;
+  var phone = document.forms["tutor"]["phone"].value;
+  var email = document.forms["tutor"]["email"].value;
+  if(subject == "" || title == "" || body == "" || phone == "" || email == ""){
     swal({
       title: "Complete everything!",
       text: "Every field is important. Please don't leavy any blank field"
