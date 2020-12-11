@@ -5,6 +5,51 @@
 {% block title %}Index{% endblock %}
 
 {% block body %}
-    <button type="button" class="btn btn-secondary" onclick="window.location.href='/publish';">Publish</a></li>
+    <div>
+        <center>Make an announcement as a tutor or as a student:</center>
+        <br>
+        <img src="{% static 'odeon/sketch3.png' %}" style="max-width:700px"><br>
+        <br>
+        <button type="button" class="btn btn-secondary" onclick="window.location.href='/publish';">Publish</button>
+    </div>
+    <br>
+    <div>
+        {% if not announcement %}
+            <center>Your announcements:</center>
+            <br>
+            <table class="table table-sm table-striped table-bordered table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Title</th>
+                        <th>Role</th>
+                        <th>Date</th>
+                        <th>Settings</th>                    
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        {% for announcement in announcements %}
+                            <tr>
+                                <td>{{ announcement.title }}</td>
+                                <td>{{ announcement.role }}</td>
+                                <td>{{ announcement.timestamp }}</td>
+                                
+                                <form name="settings" action="" method="post" onsubmit="return confirm_deletion()">
+                                    {% csrf_token %}
+                                    <td>
+                                        <button type="submit" class="btn btn-dark"><i class="fa fa-trash-o"></i></button>
+                                    </td>
+                                </form>
+                                                        
+                            </tr>
+                        {% endfor %}
+                    </tr>
+                </tbody>
+            </table>
+        {% else %}
+            <center>You don't have any announcement yet</center>
+        {% endif %}
+    </div>
+    
 
 {% endblock %}

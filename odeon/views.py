@@ -12,7 +12,11 @@ from .models import User, Subject, Announcement, Bookmark
 @login_required
 def index(request):
     
-    return render(request, "odeon/index.html")
+    announcements = Announcement.objects.filter(user=request.user)
+
+    return render(request, "odeon/index.html", {
+        "announcements": announcements
+    })
 
 
 def login_view(request):
