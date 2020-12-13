@@ -78,13 +78,14 @@ function validate_register() {
 }
 
 function validate_tutor() {
-  var subject = document.forms["tutor"]["subject"].value;
-  var title = document.forms["tutor"]["title"].value;
-  var body = document.forms["tutor"]["body"].value;
-  var price = document.forms["tutor"]["price"].value;
-  var phone = document.forms["tutor"]["phone"].value;
-  var email = document.forms["tutor"]["email"].value;
-  if(subject=="empty" || title == "" || body == "" || price == "" || phone == "" || email == ""){
+  var subject = document.forms["tutor"]["t_subject"].value;
+  var title = document.forms["tutor"]["t_title"].value;
+  var body = document.forms["tutor"]["t_body"].value;
+  var price = document.forms["tutor"]["t_price"].value;
+  var phone = document.forms["tutor"]["t_phone"].value;
+  var email = document.forms["tutor"]["t_email"].value;
+
+  if(subject == "empty" || title == "" || body == "" || price == "" || phone == "" || email == ""){
     swal({
       title: "Complete everything!",
       text: "Every field is important. Please don't leave any blank field"
@@ -94,16 +95,41 @@ function validate_tutor() {
 }
 
 function validate_student() {
-  var subject = document.forms["student"]["subject"].value;
-  var title = document.forms["student"]["title"].value;
-  var body = document.forms["student"]["body"].value;
-  var phone = document.forms["tutor"]["phone"].value;
-  var email = document.forms["tutor"]["email"].value;
-  if(subject == "" || title == "" || body == "" || phone == "" || email == ""){
+  var subject = document.forms["student"]["s_subject"].value;
+  var title = document.forms["student"]["s_title"].value;
+  var body = document.forms["student"]["s_body"].value;
+  var phone = document.forms["student"]["s_phone"].value;
+  var email = document.forms["student"]["s_email"].value;
+
+  if(subject == "empty" || title == "" || body == "" || phone == "" || email == ""){
     swal({
       title: "Complete everything!",
-      text: "Every field is important. Please don't leavy any blank field"
+      text: "Every field is important. Please don't leav any blank field"
     });
     return false;
   }
+}
+
+function confirm_deletion() {
+  var form = document.querySelector("#deleteform")
+
+  swal({
+    title: "Confirm deletion",
+    text: "Are you sure you want to delete this announcement?",
+    icon: "warning",
+    buttons: true,
+    dangerMode: true,
+  })
+  .then((willDelete) => {
+    if (willDelete) {
+      swal("Announcement deleted", {
+        icon: "success",
+      })
+      .then(function() {
+        form.submit();
+      });
+    } else {
+      return false;
+    }
+    })
 }

@@ -12,7 +12,10 @@ from .models import User, Subject, Announcement, Bookmark
 @login_required
 def index(request):
     
-    announcements = Announcement.objects.filter(user=request.user)
+    if not Announcement.objects.filter(user=request.user):
+        announcements = "None"
+    else:
+        announcements = Announcement.objects.filter(user=request.user)
 
     return render(request, "odeon/index.html", {
         "announcements": announcements
@@ -89,7 +92,19 @@ def publish(request):
         announcement = Announcement(user=user, subject_id=subject_id, role=role, title=title, body=body, price=price, email=email, phone=phone)
         announcement.save()
 
+        return HttpResponseRedirect(reverse("index"))
+
     return render(request, "odeon/publish.html", {
         "subjects": Subject.objects.all()
 
     })
+
+def delete(request):
+
+    if request.method == "POST":
+        announcement_id = request.POST.get("announcement_id")
+    
+    Announcement.objects.get(pk=announcement_id).delete()
+
+    return HttpResponseRedirect(reverse("index"))
+

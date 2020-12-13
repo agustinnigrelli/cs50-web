@@ -5,6 +5,8 @@
 {% block title %}Index{% endblock %}
 
 {% block body %}
+    <script src="{% static 'odeon/alerts.js' %}"></script>
+
     <div>
         <center>Make an announcement as a tutor or as a student:</center>
         <br>
@@ -14,7 +16,9 @@
     </div>
     <br>
     <div>
-        {% if not announcement %}
+        {% if announcements == "None" %}
+            <center>You don't have any announcement yet</center>
+        {% else %}
             <center>Your announcements:</center>
             <br>
             <table class="table table-sm table-striped table-bordered table-hover">
@@ -34,9 +38,10 @@
                                 <td>{{ announcement.role }}</td>
                                 <td>{{ announcement.timestamp }}</td>
                                 
-                                <form name="settings" action="" method="post" onsubmit="return confirm_deletion()">
+                                <form id="deleteform" action="/delete" method="post" onsubmit="event.preventDefault(); confirm_deletion();">
                                     {% csrf_token %}
                                     <td>
+                                        <input type="hidden" name="announcement_id" value="{{ announcement.id }}">
                                         <button type="submit" class="btn btn-dark"><i class="fa fa-trash-o"></i></button>
                                     </td>
                                 </form>
@@ -46,8 +51,6 @@
                     </tr>
                 </tbody>
             </table>
-        {% else %}
-            <center>You don't have any announcement yet</center>
         {% endif %}
     </div>
     

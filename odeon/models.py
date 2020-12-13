@@ -31,4 +31,4 @@ class Bookmark(models.Model):
     announcement = models.ForeignKey(Announcement, related_name="announcement", on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"User {self.user} bookmarked {self.announcement.title}"
+        return f"User {self.user} bookmarked {self.announcement}"
