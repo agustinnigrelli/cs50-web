@@ -93,6 +93,10 @@ body
     box-shadow: 6px 6px 6px -1px rgba(0,0,0,0.72);
 }
 
+.round-border {
+    border-radius: 40px;
+}
+
 .text-bold {
     font-weight: bold;
 }

@@ -108,3 +108,19 @@ def delete(request):
 
     return HttpResponseRedirect(reverse("index"))
 
+def tutors(request):
+    
+    announcements = Announcement.objects.filter(role="tutor").order_by("-timestamp")
+
+    return render(request, "odeon/tutors.html", {
+        "announcements": announcements
+    })
+
+
+def students(request):
+    
+    announcements = Announcement.objects.filter(role="student").order_by("-timestamp")
+    
+    return render(request, "odeon/students.html", {
+        "announcements": announcements
+    })

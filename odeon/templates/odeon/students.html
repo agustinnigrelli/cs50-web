@@ -1,0 +1,41 @@
+{% extends "odeon/layout.html" %}
+
+{% load static %}
+
+{% block title %}
+    Students
+{% endblock %}
+
+{% block body %}
+    {% for announcement in announcements %}
+        <div class="container bg-light round-border mx-auto published shadow-cssmatic">
+            <br>
+            <div class="form-row mx-3">
+                <div class="form-group col-6 text-left">
+                    <p><span class="text-bold">Subject: </span><span>{{ announcement.subject_id }}</span></p>
+                </div>
+                <div class="form-group col-6 text-right">
+                    <p><span class="text-bold">Topic: </span><span>{{ announcement.title }}</span></p>
+                </div>
+
+            </div>
+            <div class="form-row mx-3">
+                <div class="form-group col-6 text-left">
+                    <p class="text-justify"><span class="text-bold">Description: </span><span>{{ announcement.body }}</span></p>
+                </div>
+            </div>
+            <div class="form-row mx-3">
+                <div class="form-group col-12 text-left">
+                    <p><span class="text-bold">Student: </span><span>{{ announcement.user }}</span></p>
+                    <p><span class="text-bold">Phone number: </span><span>{{ announcement.phone }}</span></p>
+                    <p><span class="text-bold">e-mail: </span><span>{{ announcement.email }}</span></p>
+                </div>
+            </div>
+        </div>
+        <br>
+        {% empty %}
+            <center><h3>There are no announcements of students yet</h3></center>
+            <img src="{% static 'odeon/sketchglass.png' %}" style="max-width:400px">
+            <p>You can create a new announcement <a href="/publish">here</a></p>
+    {% endfor %}
+{% endblock %}
