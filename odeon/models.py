@@ -21,7 +21,7 @@ class Announcement(models.Model):
     email = models.CharField(max_length=50, null=True)
     phone = models.CharField(max_length=50, null=True)
     activity = models.CharField(max_length=10, default="Open")
-    timestamp = models.DateField(auto_now_add=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"User {self.user} published '{self.title}' in '{self.subject_id}' category at {self.timestamp}"
