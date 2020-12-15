@@ -1,0 +1,88 @@
+{% extends "odeon/layout.html" %}
+
+{% load static %}
+
+{% block title %}Bookmarks{% endblock %}
+
+{% block body %}
+    <script src="{% static 'odeon/alerts.js' %}"></script>
+
+    {% for item in items %}
+        {% if item.announcement.role == "tutor" %}
+            <div class="container bg-light round-border mx-auto published shadow-cssmatic">
+                <br>
+                <div class="form-row mx-3">
+                    <div class="form-group col-6 text-left">
+                        <p><span class="text-bold">Title: </span><span>{{ item.announcement.title }}</span></p>
+                    </div>
+                    <div class="form-group col-6 text-right">
+                        <p><span class="text-bold">Tutor: </span><span>{{ item.announcement.user }}</span></p>
+                    </div>
+                </div>
+                <div class="form-row mx-3">
+                    <div class="form-group col-6 text-left">
+                        <p class="text-justify"><span class="text-bold">Description: </span><span>{{ item.announcement.body }}</span></p>
+                    </div>
+                </div>
+                <div class="form-row mx-3">
+                    <div class="form-group col-6 text-left">
+                        <p><span class="text-bold">Price/h: </span><span>${{ item.announcement.price }}</span></p>
+                    </div>
+                </div>
+                <div class="form-row mx-3">
+                    <div class="form-group col-6 text-left">
+                        <p><span class="text-bold">Phone number: </span><span>{{ item.announcement.phone }}</span></p>
+                        <p><span class="text-bold">e-mail: </span><span>{{ item.announcement.email }}</span></p>
+                    </div>
+                    <div class="form-group col-6 text-right">
+                        <br>
+                        <form id="unbookmarkform" action="/unbookmark" method="post" onsubmit="event.preventDefault(); confirm_unbookmark();">
+                            {% csrf_token %}
+                            <input type="hidden" name="announcement_id" value="{{ item.announcement.id }}">
+                            <button type="submit" class="btn btn-danger"><i class="fa fa-ban"></i></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <br>
+        {% else %}
+            <div class="container bg-light round-border mx-auto published shadow-cssmatic">
+                <br>
+                <div class="form-row mx-3">
+                    <div class="form-group col-6 text-left">
+                        <p><span class="text-bold">Subject: </span><span>{{ item.announcement.subject_id }}</span></p>
+                    </div>
+                    <div class="form-group col-6 text-right">
+                        <p><span class="text-bold">Topic: </span><span>{{ item.announcement.title }}</span></p>
+                    </div>
+
+                </div>
+                <div class="form-row mx-3">
+                    <div class="form-group col-6 text-left">
+                        <p class="text-justify"><span class="text-bold">Description: </span><span>{{ item.announcement.body }}</span></p>
+                    </div>
+                </div>
+                <div class="form-row mx-3">
+                    <div class="form-group col-6 text-left">
+                        <p><span class="text-bold">Student: </span><span>{{ item.announcement.user }}</span></p>
+                        <p><span class="text-bold">Phone number: </span><span>{{ item.announcement.phone }}</span></p>
+                        <p><span class="text-bold">e-mail: </span><span>{{ item.announcement.email }}</span></p>
+                    </div>
+                    <div class="form-group col-6 text-right">
+                        <br><br><br>
+                        <form id="unbookmarkform" action="/unbookmark" method="post" onsubmit="event.preventDefault(); confirm_unbookmark();">
+                            {% csrf_token %}
+                            <input type="hidden" name="announcement_id" value="{{ item.announcement.id }}">
+                            <button type="submit" class="btn btn-danger"><i class="fa fa-ban"></i></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <br>
+        {% endif %}
+        {% empty %}
+            <center><h3>There are no bookmarked announcements yet</h3></center>
+            <img src="{% static 'odeon/sketchglass.png' %}" style="max-width:400px">
+            <p>You can bookmark an announcement in <a href="/tutors">Tutors</a> or <a href="/students">Students</a> tabs.</p>
+    {% endfor %}
+{% endblock %}

@@ -133,3 +133,27 @@ function confirm_deletion() {
     }
     })
 }
+
+function confirm_unbookmark() {
+  var form = document.querySelector("#unbookmarkform")
+
+  swal({
+    title: "Are your sure?",
+    text: "You are about to unbookmark this announcement",
+    icon: "warning",
+    buttons: true,
+    dangerMode: true,
+  })
+  .then((willDelete) => {
+    if (willDelete) {
+      swal("Announcement unbookmarked", {
+        icon: "success",
+      })
+      .then(function() {
+        form.submit();
+      });
+    } else {
+      return false;
+    }
+    })
+}

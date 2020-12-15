@@ -159,7 +159,10 @@ def bookmark(request):
 def unbookmark(request):
 
     if request.method == "POST":
-        pass
+        
+        announcement_id = request.POST.get("announcement_id")
+
+        Bookmark.objects.get(announcement=announcement_id).delete()
 
     return HttpResponseRedirect(reverse("bookmarks"))
 
