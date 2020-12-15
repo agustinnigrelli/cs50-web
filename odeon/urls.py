@@ -10,5 +10,7 @@ urlpatterns = [
     path("delete", views.delete, name="delete"),
     path("tutors", views.tutors, name="tutors"),
     path("students", views.students, name="students"),
-    path("bookmark", views.bookmark, name="bookmark")
+    path("bookmark", views.bookmark, name="bookmark"),
+    path("unbookmark", views.unbookmark, name="unbookmark"),
+    path("bookmarks", views.bookmarks, name="bookmarks")
 ]

@@ -76,6 +76,7 @@ def register(request):
     else:
         return render(request, "odeon/register.html")
 
+@login_required
 def publish(request):
     
     if request.method == "POST":
@@ -111,6 +112,7 @@ def delete(request):
 
     return HttpResponseRedirect(reverse("index"))
 
+@login_required
 def tutors(request):
     
     announcements = Announcement.objects.filter(role="tutor").annotate(
@@ -121,7 +123,7 @@ def tutors(request):
         "announcements": announcements
     })
 
-
+@login_required
 def students(request):
     
     announcements = Announcement.objects.filter(role="student").annotate(
@@ -140,7 +142,7 @@ def bookmark(request):
         user = User.objects.get(pk=request.user.id)
         announcement = Announcement.objects.get(pk=data["announcement_id"])
 
-        # If the post is not in user's likelist create a row
+        # If the post is not in user's Bookmarks create a row
         if not Bookmark.objects.filter(user=user, announcement=announcement):
             
             bookmark = Bookmark(user=user, announcement=announcement)
@@ -152,3 +154,18 @@ def bookmark(request):
             Bookmark.objects.get(user=user, announcement=announcement).delete()
    
     return JsonResponse({}, safe=False)
+    
+
+def unbookmark(request):
+
+    if request.method == "POST":
+        pass
+
+    return HttpResponseRedirect(reverse("bookmarks"))
+
+
+def bookmarks(request):
+
+    return render(request, "odeon/bookmarks.html", {
+        "items" : Bookmark.objects.filter(user=request.user.id)
+        })
