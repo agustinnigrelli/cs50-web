@@ -1,13 +1,16 @@
+import json
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.db.models import Exists, OuterRef
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
 import datetime
 
 from .models import User, Subject, Announcement, Bookmark
+
 
 @login_required
 def index(request):
@@ -110,7 +113,9 @@ def delete(request):
 
 def tutors(request):
     
-    announcements = Announcement.objects.filter(role="tutor").order_by("-timestamp")
+    announcements = Announcement.objects.filter(role="tutor").annotate(
+        is_bookmarked=Exists(Bookmark.objects.filter(announcement=OuterRef('pk'), user=request.user))
+        ).order_by("-timestamp")
 
     return render(request, "odeon/tutors.html", {
         "announcements": announcements
@@ -119,8 +124,31 @@ def tutors(request):
 
 def students(request):
     
-    announcements = Announcement.objects.filter(role="student").order_by("-timestamp")
+    announcements = Announcement.objects.filter(role="student").annotate(
+        is_bookmarked=Exists(Bookmark.objects.filter(announcement=OuterRef('pk'), user=request.user))
+        ).order_by("-timestamp")
     
     return render(request, "odeon/students.html", {
         "announcements": announcements
     })
+
+def bookmark(request):
+
+    if request.method == "POST":
+
+        data = json.loads(request.body)
+        user = User.objects.get(pk=request.user.id)
+        announcement = Announcement.objects.get(pk=data["announcement_id"])
+
+        # If the post is not in user's likelist create a row
+        if not Bookmark.objects.filter(user=user, announcement=announcement):
+            
+            bookmark = Bookmark(user=user, announcement=announcement)
+            bookmark.save()
+        
+        # If it's already there delete the row
+        else:
+
+            Bookmark.objects.get(user=user, announcement=announcement).delete()
+   
+    return JsonResponse({}, safe=False)

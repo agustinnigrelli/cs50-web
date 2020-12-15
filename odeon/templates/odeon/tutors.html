@@ -7,6 +7,8 @@
 {% endblock %}
 
 {% block body %}
+    <script src="{% static 'odeon/announcements.js' %}"></script>
+
     {% for announcement in announcements %}
         <div class="container bg-light round-border mx-auto published shadow-cssmatic">
             <br>
@@ -29,9 +31,19 @@
                 </div>
             </div>
             <div class="form-row mx-3">
-                <div class="form-group col-12 text-left">
+                <div class="form-group col-6 text-left">
                     <p><span class="text-bold">Phone number: </span><span>{{ announcement.phone }}</span></p>
                     <p><span class="text-bold">e-mail: </span><span>{{ announcement.email }}</span></p>
+                </div>
+                <div class="form-group col-6 text-right">
+                    <br>
+                    {% if announcement.is_bookmarked %}
+                        <p><span><i class="fa fa-bookmark fa-2x bookmark" data-id="{{ announcement.id }}" id="bookmark-{{ announcement.id }}"></i></span></p>
+                        <input type="hidden" id="bookmark-status-{{ announcement.id }}" value="true">
+                    {% else %}
+                        <p><span><i class="fa fa-bookmark-o fa-2x bookmark" data-id="{{ announcement.id }}" id="bookmark-{{ announcement.id }}"></i></span></p>
+                        <input type="hidden" id="bookmark-status-{{ announcement.id }}" value="false">
+                    {% endif %} 
                 </div>
             </div>
         </div>
