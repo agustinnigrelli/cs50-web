@@ -77,6 +77,38 @@ def register(request):
         return render(request, "odeon/register.html")
 
 @login_required
+def password(request):
+    
+    if request.method == "POST":
+
+        user = User.objects.get(pk=request.user.id)
+        oldpassword = request.POST.get("oldpassword")
+        newpassword = request.POST.get("newpassword")
+        newpasswordcon = request.POST.get("newpasswordcon")
+        print(user.password)
+        if oldpassword == user.password:
+
+            if newpassword == newpasswordcon:
+                user.password = newpassword
+                user.save()
+                return render(request, "odeon/password.html", {
+                "message": "Password changed succesfully."
+                })
+
+            else:
+                return render(request, "odeon/password.html", {
+                "message": "Passwords don't match."
+                })
+        
+        else:
+            return render(request, "odeon/password.html", {
+                "message": "Wrong password."
+            })
+
+
+    return render(request, "odeon/password.html")
+
+@login_required
 def publish(request):
     
     if request.method == "POST":
