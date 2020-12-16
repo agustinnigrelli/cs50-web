@@ -86,15 +86,15 @@ def password(request):
         newpassword = request.POST.get("newpassword")
         newpasswordcon = request.POST.get("newpasswordcon")
         print(user.password)
-        if oldpassword == user.password:
+        if user.check_password(oldpassword):
 
             if newpassword == newpasswordcon:
-                user.password = newpassword
+                user.set_password(newpassword)
                 user.save()
+                login(request, user)
                 return render(request, "odeon/password.html", {
                 "message": "Password changed succesfully."
                 })
-
             else:
                 return render(request, "odeon/password.html", {
                 "message": "Passwords don't match."
