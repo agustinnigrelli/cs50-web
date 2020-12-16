@@ -85,7 +85,7 @@ def password(request):
         oldpassword = request.POST.get("oldpassword")
         newpassword = request.POST.get("newpassword")
         newpasswordcon = request.POST.get("newpasswordcon")
-        print(user.password)
+        
         if user.check_password(oldpassword):
 
             if newpassword == newpasswordcon:
