@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
-from django.db.models import Exists, OuterRef
+from django.db.models import Exists, OuterRef, Q
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
@@ -75,6 +75,28 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "odeon/register.html")
+
+
+def search(request):
+
+    if request.method == "POST":
+        q = request.POST.get("q")
+
+        if not q or q == "":
+            founded = "None"
+        
+        else:
+            founded = Announcement.objects.filter(
+                Q(user__username__contains=q) | 
+                Q(title__contains=q) | 
+                Q(body__contains=q)
+            ).annotate(
+                is_bookmarked=Exists(Bookmark.objects.filter(announcement=OuterRef('pk'), user=request.user))
+            ).order_by("-timestamp")
+        
+        return render(request, "odeon/search.html", {
+            "founded": founded
+        })
 
 @login_required
 def password(request):
