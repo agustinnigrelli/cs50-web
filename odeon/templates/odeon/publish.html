@@ -18,6 +18,9 @@
     </select>
     <br>
     <br>
+    <div id="nothing">
+        <img src="{% static 'odeon/sketch2.png' %}" style="max-width:400px">
+    </div>
     <div id="tutor">
         <form name="tutor" id="tutor" class="acc-form" action="/publish" method="post" onsubmit="return validate_tutor()" required>
             {% csrf_token %}
