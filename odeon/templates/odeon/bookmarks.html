@@ -20,7 +20,7 @@
                     </div>
                 </div>
                 <div class="form-row mx-3">
-                    <div class="form-group col-6 text-left">
+                    <div class="form-group">
                         <p class="text-justify"><span class="text-bold">Description: </span><span>{{ item.announcement.body }}</span></p>
                     </div>
                 </div>
@@ -36,7 +36,7 @@
                     </div>
                     <div class="form-group col-6 text-right">
                         <br>
-                        <form id="unbookmarkform" action="/unbookmark" method="post" onsubmit="event.preventDefault(); confirm_unbookmark();">
+                        <form id="unbookmarkform-{{ item.announcement.id }}" action="/unbookmark" method="post" onsubmit="event.preventDefault(); confirm_unbookmark({{ item.announcement.id }});">
                             {% csrf_token %}
                             <input type="hidden" name="announcement_id" value="{{ item.announcement.id }}">
                             <button type="submit" class="btn btn-danger"><i class="fa fa-ban"></i></button>
@@ -58,7 +58,7 @@
 
                 </div>
                 <div class="form-row mx-3">
-                    <div class="form-group col-6 text-left">
+                    <div class="form-group">
                         <p class="text-justify"><span class="text-bold">Description: </span><span>{{ item.announcement.body }}</span></p>
                     </div>
                 </div>
@@ -70,7 +70,7 @@
                     </div>
                     <div class="form-group col-6 text-right">
                         <br><br><br>
-                        <form id="unbookmarkform" action="/unbookmark" method="post" onsubmit="event.preventDefault(); confirm_unbookmark();">
+                        <form id="unbookmarkform-{{ item.announcement.id }}" action="/unbookmark" method="post" onsubmit="event.preventDefault(); confirm_unbookmark({{ item.announcement.id }});">
                             {% csrf_token %}
                             <input type="hidden" name="announcement_id" value="{{ item.announcement.id }}">
                             <button type="submit" class="btn btn-danger"><i class="fa fa-ban"></i></button>
@@ -85,4 +85,21 @@
             <img src="{% static 'odeon/sketchglass.png' %}" style="max-width:400px">
             <p>You can bookmark an announcement in <a href="/tutors">Tutors</a> or <a href="/students">Students</a> tabs.</p>
     {% endfor %}
+    <div class="pagination">
+        <nav aria-label="Page navigation example"></nav>
+            <ul class="pagination" style="margin:auto">
+
+                    {% if items.has_previous %}
+                        <li class="page-item"><a class="page-link" href="?page=1">&laquo; first</a></li>
+                        <li class="page-item"><a class="page-link" href="?page={{ items.previous_page_number }}">previous</a></li>
+                    {% endif %}
+ 
+                    {% if items.has_next %}
+                        <li class="page-item"><a class="page-link" href="?page={{ items.next_page_number }}">next</a></li>
+                        <li class="page-item"><a class="page-link" href="?page={{ items.paginator.num_pages }}">last &raquo;</a></li>
+                    {% endif %}  
+                    
+            </ul>
+        </nav>
+    </div>
 {% endblock %}

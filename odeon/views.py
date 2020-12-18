@@ -2,6 +2,7 @@ import json
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 from django.db import IntegrityError
 from django.db.models import Exists, OuterRef, Q
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
@@ -93,9 +94,15 @@ def search(request):
             ).annotate(
                 is_bookmarked=Exists(Bookmark.objects.filter(announcement=OuterRef('pk'), user=request.user))
             ).order_by("-timestamp")
+
+        page_number = request.GET.get('page')
+    
+        founded = Paginator(founded, 10)
+        founded = founded.get_page(page_number)
         
         return render(request, "odeon/search.html", {
             "founded": founded
+
         })
 
 @login_required
@@ -173,6 +180,11 @@ def tutors(request):
         is_bookmarked=Exists(Bookmark.objects.filter(announcement=OuterRef('pk'), user=request.user))
         ).order_by("-timestamp")
 
+    page_number = request.GET.get('page')
+    
+    announcements = Paginator(announcements, 10)
+    announcements = announcements.get_page(page_number)
+
     return render(request, "odeon/tutors.html", {
         "announcements": announcements
     })
@@ -184,6 +196,11 @@ def students(request):
         is_bookmarked=Exists(Bookmark.objects.filter(announcement=OuterRef('pk'), user=request.user))
         ).order_by("-timestamp")
     
+    page_number = request.GET.get('page')
+    
+    announcements = Paginator(announcements, 10)
+    announcements = announcements.get_page(page_number)
+
     return render(request, "odeon/students.html", {
         "announcements": announcements
     })
@@ -223,6 +240,13 @@ def unbookmark(request):
 
 def bookmarks(request):
 
+    items = Bookmark.objects.filter(user=request.user.id)
+
+    page_number = request.GET.get('page')
+    
+    items = Paginator(items, 10)
+    items = items.get_page(page_number)
+
     return render(request, "odeon/bookmarks.html", {
-        "items" : Bookmark.objects.filter(user=request.user.id)
+        "items" : items
         })

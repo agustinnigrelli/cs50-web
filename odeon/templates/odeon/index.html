@@ -35,10 +35,10 @@
                         {% for announcement in announcements %}
                             <tr>
                                 <td>{{ announcement.title }}</td>
-                                <td>{{ announcement.role }}</td>
+                                <td>{{ announcement.id }}</td>
                                 <td>{{ announcement.timestamp }}</td>
                                 
-                                <form id="deleteform" action="/delete" method="post" onsubmit="event.preventDefault(); confirm_deletion();">
+                                <form id="deleteform-{{ announcement.id }}" action="/delete" method="post" onsubmit="event.preventDefault(); confirm_deletion({{ announcement.id}});">
                                     {% csrf_token %}
                                     <td>
                                         <input type="hidden" name="announcement_id" value="{{ announcement.id }}">

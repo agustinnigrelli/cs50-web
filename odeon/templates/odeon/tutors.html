@@ -21,7 +21,7 @@
                 </div>
             </div>
             <div class="form-row mx-3">
-                <div class="form-group col-6 text-left">
+                <div class="form-group">
                     <p class="text-justify"><span class="text-bold">Description: </span><span>{{ announcement.body }}</span></p>
                 </div>
             </div>
@@ -53,4 +53,21 @@
             <img src="{% static 'odeon/sketchglass.png' %}" style="max-width:400px">
             <p>You can create a new announcement <a href="/publish">here</a></p>
     {% endfor %}
+    <div class="pagination">
+        <nav aria-label="Page navigation example"></nav>
+            <ul class="pagination" style="margin:auto">
+
+                    {% if announcements.has_previous %}
+                        <li class="page-item"><a class="page-link" href="?page=1">&laquo; first</a></li>
+                        <li class="page-item"><a class="page-link" href="?page={{ announcements.previous_page_number }}">previous</a></li>
+                    {% endif %}
+
+                    {% if announcements.has_next %}
+                        <li class="page-item"><a class="page-link" href="?page={{ announcements.next_page_number }}">next</a></li>
+                        <li class="page-item"><a class="page-link" href="?page={{ announcements.paginator.num_pages }}">last &raquo;</a></li>
+                    {% endif %}  
+                    
+            </ul>
+        </nav>
+    </div>
 {% endblock %}

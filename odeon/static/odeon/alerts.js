@@ -110,8 +110,8 @@ function validate_student() {
   }
 }
 
-function confirm_deletion() {
-  var form = document.querySelector("#deleteform")
+function confirm_deletion(id) {
+  var form = document.querySelector(`#deleteform-${id}`)
 
   swal({
     title: "Confirm deletion",
@@ -134,8 +134,8 @@ function confirm_deletion() {
     })
 }
 
-function confirm_unbookmark() {
-  var form = document.querySelector("#unbookmarkform")
+function confirm_unbookmark(id) {
+  var form = document.querySelector(`#unbookmarkform-${id}`)
 
   swal({
     title: "Are your sure?",
