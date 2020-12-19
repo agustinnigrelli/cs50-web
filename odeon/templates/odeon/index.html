@@ -35,7 +35,7 @@
                         {% for announcement in announcements %}
                             <tr>
                                 <td>{{ announcement.title }}</td>
-                                <td>{{ announcement.id }}</td>
+                                <td>{{ announcement.role }}</td>
                                 <td>{{ announcement.timestamp }}</td>
                                 
                                 <form id="deleteform-{{ announcement.id }}" action="/delete" method="post" onsubmit="event.preventDefault(); confirm_deletion({{ announcement.id}});">

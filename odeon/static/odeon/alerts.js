@@ -33,10 +33,10 @@ function validate_account() {
 }
 
 function validate_password() {
-  var password = document.forms["password"]["password"].value;
+  var oldpassword = document.forms["password"]["oldpassword"].value;
   var newpassword = document.forms["password"]["newpassword"].value;
   var newpasswordcon = document.forms["password"]["newpasswordcon"].value;
-  if (password == "") {
+  if (oldpassword == "") {
     swal({
         title: "Not so fast!",
         text: "Ir order to change your password, you must first provide it"
